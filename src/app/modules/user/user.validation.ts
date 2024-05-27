@@ -1,26 +1,7 @@
 import { z } from 'zod';
 
-// Using zod
-const usernameSchema = z.object({
-  firstName: z
-    .string({
-      required_error: 'Name is required',
-    })
-    .trim()
-    .max(20, { message: 'Firstname is required' })
-    .regex(/^[A-Za-z]+$/, {
-      message: 'Firstname can only contain alphabetic characters',
-    }),
-  lastName: z
-    .string()
-    .max(20, { message: 'Firstname is required' })
-    .regex(/^[A-Za-z]+$/, {
-      message: 'Lastname can only contain alphabetic characters',
-    }),
-});
-
-const studentValidationSchemaZod = z.object({
-  name: usernameSchema,
+const UserValidationSchemaZod = z.object({
+  id: z.string(),
   password: z
     .string({ message: 'Password is required' })
     .max(20, { message: 'Password can not be more than 20 charcaters' }),
@@ -48,5 +29,3 @@ const studentValidationSchemaZod = z.object({
   avatar: z.string().url({ message: 'Avatar must be a valid URI' }),
   isDeleted: z.boolean().optional(),
 });
-
-export default studentValidationSchemaZod;

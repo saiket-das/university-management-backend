@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { Student } from './student.interface';
+import { StudentPorps } from './student.interface';
 import { StudentService } from './student.service';
-import studentValidationSchemaZod from './student.validation.zod';
+import StudentValidationSchemaZod from './student.validation';
 
 // Create a new student
 const createStudent = async (req: Request, res: Response) => {
   try {
-    const student: Student = req.body;
-    const zodParseData = studentValidationSchemaZod.parse(student);
+    const student: StudentPorps = req.body;
+    const zodParseData = StudentValidationSchemaZod.parse(student);
 
     const result = await StudentService.createStudentIntoDB(zodParseData);
 

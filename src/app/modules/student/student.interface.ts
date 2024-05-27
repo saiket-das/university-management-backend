@@ -5,17 +5,23 @@ export interface UserNameProps {
 
 export interface GuardianProps {
   fatherName: string;
+  fatherOccupation: string;
+  fatherContactNo: string;
   motherName: string;
+  motherOccupation: string;
+  motherContactNo: string;
 }
 
 export interface LocalGuardianProps {
   name: string;
-  relation: string;
+  occupation: string;
+  contactNo: string;
+  address: string;
 }
 
-export interface Student {
+export interface StudentPorps {
+  id: string;
   name: UserNameProps;
-  password: string;
   email: string;
   gender: 'male' | 'female' | 'others';
   dateOfBirth: string;

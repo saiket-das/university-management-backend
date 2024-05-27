@@ -1,7 +1,10 @@
-import bcrypt from 'bcrypt';
-import validator from 'validator';
 import { Schema, model } from 'mongoose';
-import { Student, UserNameProps } from './student.interface';
+import {
+  GuardianProps,
+  LocalGuardianProps,
+  StudentPorps,
+  UserNameProps,
+} from './student.interface';
 import config from '../../config';
 
 const usernameSchema = new Schema<UserNameProps>({
@@ -15,14 +18,60 @@ const usernameSchema = new Schema<UserNameProps>({
   },
 });
 
-const studentSchema = new Schema<Student>(
+const guardianSchema = new Schema<GuardianProps>({
+  fatherName: {
+    type: String,
+    required: true,
+  },
+  fatherOccupation: {
+    type: String,
+    required: true,
+  },
+  fatherContactNo: {
+    type: String,
+    required: true,
+  },
+  motherName: {
+    type: String,
+    required: true,
+  },
+  motherOccupation: {
+    type: String,
+    required: true,
+  },
+  motherContactNo: {
+    type: String,
+    required: true,
+  },
+});
+
+const localGuradianSchema = new Schema<LocalGuardianProps>({
+  name: {
+    type: String,
+    required: true,
+  },
+  occupation: {
+    type: String,
+    required: true,
+  },
+  contactNo: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+});
+
+const studentSchema = new Schema<StudentPorps>(
   {
-    name: {
-      type: usernameSchema,
+    id: {
+      type: String,
       required: true,
     },
-    password: {
-      type: String,
+    name: {
+      type: usernameSchema,
       required: true,
     },
     email: {
@@ -38,15 +87,19 @@ const studentSchema = new Schema<Student>(
       maxlength: 20,
       required: true,
     },
-    dateOfBirth: { type: String },
-    contactNumber: { type: String },
+    dateOfBirth: { type: String, required: true },
+    contactNumber: { type: String, required: true },
+    emergencyContactNumber: { type: String, required: true },
+    presentAddress: { type: String, required: true },
+    permanentAddress: { type: String, required: true },
+    guardian: guardianSchema,
+    localGuardian: localGuradianSchema,
     bloodGroup: {
       type: String,
       enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
       required: true,
     },
-    address: { type: String },
-    profileImage: { type: String },
+    profileImage: { type: String, required: true },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -61,15 +114,19 @@ const studentSchema = new Schema<Student>(
 
 // middlewares
 
-// hashing password
-studentSchema.pre('save', async function (next) {
-  const student = this;
-  student.password = await bcrypt.hash(
-    student.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
+// // hashing password
+// studentSchema.pre('save', async function (next) {
+//   const student = this;
+//   student.password = await bcrypt.hash(
+//     student.password,
+//     Number(config.bcrypt_salt_rounds),
+//   );
+//   next();
+// });
+// studentSchema.post('save', function (doc, next) {
+//   doc.password = '';
+//   next();
+// });
 
 // filter out deleted data
 studentSchema.pre('find', function (next) {
@@ -86,14 +143,9 @@ studentSchema.pre('aggregate', function (next) {
   next();
 });
 
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
-
 // virtual
 studentSchema.virtual('fullName').get(function () {
   return this.name.firstName + ' ' + this.name.lastName;
 });
 
-export const StudentModel = model<Student>('Student', studentSchema);
+export const StudentModel = model<StudentPorps>('Student', studentSchema);
