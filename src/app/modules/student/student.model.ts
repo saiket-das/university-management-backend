@@ -1,28 +1,17 @@
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import { Schema, model } from 'mongoose';
-import { Student, UserName } from './student.interface';
+import { Student, UserNameProps } from './student.interface';
 import config from '../../config';
 
-const usernameSchema = new Schema<UserName>({
+const usernameSchema = new Schema<UserNameProps>({
   firstName: {
     type: String,
-    trim: true,
-    required: [true, 'Firstname is required'],
-    validate: {
-      validator: (value: string) => {
-        validator.isAlpha(value);
-      },
-      message: '{VALUE} is not valid',
-    },
+    required: true,
   },
   lastName: {
     type: String,
-    required: [true, 'Lastname is required'],
-    validate: {
-      validator: (value: string) => validator.isAlpha(value),
-      message: '{VALUE} is not valid',
-    },
+    required: true,
   },
 });
 
@@ -30,7 +19,7 @@ const studentSchema = new Schema<Student>(
   {
     name: {
       type: usernameSchema,
-      required: [true, 'Name is required'],
+      required: true,
     },
     password: {
       type: String,
@@ -46,7 +35,7 @@ const studentSchema = new Schema<Student>(
       enum: {
         values: ['male', 'female', 'others'],
       },
-      maxlength: [20, "Can't be more than 20 characters"],
+      maxlength: 20,
       required: true,
     },
     dateOfBirth: { type: String },
@@ -54,15 +43,10 @@ const studentSchema = new Schema<Student>(
     bloodGroup: {
       type: String,
       enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
-      required: [true, 'Blood group is required'],
+      required: true,
     },
     address: { type: String },
-    isActive: {
-      type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
-    },
-    avatar: { type: String },
+    profileImage: { type: String },
     isDeleted: {
       type: Boolean,
       default: false,

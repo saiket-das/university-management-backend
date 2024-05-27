@@ -16,8 +16,6 @@ const getAllStudentsFromDB = async () => {
 
 // Get student by Id
 const getStudentByIdFromDB = async (studentId: string) => {
-  // const result = await StudentModel.findOne({ _id: studentId });
-  console.log(studentId);
   const result = await StudentModel.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(studentId) } },
   ]);
