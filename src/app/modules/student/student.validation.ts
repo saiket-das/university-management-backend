@@ -73,7 +73,7 @@ const localGuardianSchemaValidation = z.object({
   }),
 });
 
-const StudentValidationSchemaZod = z.object({
+const studentSchemaValidation = z.object({
   name: usernameSchemaValidation,
   email: z
     .string({ message: 'Email is required' })
@@ -109,4 +109,4 @@ const StudentValidationSchemaZod = z.object({
   isDeleted: z.boolean().optional(),
 });
 
-export default StudentValidationSchemaZod;
+export default studentSchemaValidation;
