@@ -1,7 +1,9 @@
 import { model, Schema } from 'mongoose';
+import bcrypt from 'bcrypt';
 import { UserProps } from './user.interface';
+import config from '../../config';
 
-const UserSchema = new Schema<UserProps>(
+const userSchema = new Schema<UserProps>(
   {
     id: {
       type: String,
@@ -13,18 +15,16 @@ const UserSchema = new Schema<UserProps>(
     },
     needsPasswordChange: {
       type: Boolean,
-      required: true,
       default: true,
     },
     role: {
       type: String,
       enum: ['admin', 'faculty', 'student'],
-      required: true,
     },
     status: {
       type: String,
       enum: ['in-progress', 'blocked'],
-      required: true,
+      default: 'in-progress',
     },
     isDeleted: {
       type: Boolean,
@@ -36,4 +36,22 @@ const UserSchema = new Schema<UserProps>(
   },
 );
 
-export const UserModel = model<UserProps>('User', UserSchema);
+// middlewares
+
+// hashing password
+userSchema.pre('save', async function (next) {
+  const student = this;
+  student.password = await bcrypt.hash(
+    student.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+// send user empty password after hasshing
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+export const UserModel = model<UserProps>('User', userSchema);

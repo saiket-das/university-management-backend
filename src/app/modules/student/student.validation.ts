@@ -74,6 +74,7 @@ const localGuardianSchemaValidation = z.object({
 });
 
 const studentSchemaValidation = z.object({
+  id: z.string(),
   name: usernameSchemaValidation,
   email: z
     .string({ message: 'Email is required' })

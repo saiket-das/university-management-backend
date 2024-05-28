@@ -1,3 +1,5 @@
+import { ObjectId, Types } from 'mongoose';
+
 export interface UserNameProps {
   firstName: string;
   lastName: string;
@@ -19,8 +21,10 @@ export interface LocalGuardianProps {
   address: string;
 }
 
-export interface StudentPorps {
+export interface StudentProps {
   id: string;
+  password: string;
+  user: Types.ObjectId;
   name: UserNameProps;
   email: string;
   gender: 'male' | 'female' | 'others';

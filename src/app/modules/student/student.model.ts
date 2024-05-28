@@ -1,11 +1,10 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 import {
   GuardianProps,
   LocalGuardianProps,
-  StudentPorps,
+  StudentProps,
   UserNameProps,
 } from './student.interface';
-import config from '../../config';
 
 const usernameSchema = new Schema<UserNameProps>({
   firstName: {
@@ -64,11 +63,20 @@ const localGuradianSchema = new Schema<LocalGuardianProps>({
   },
 });
 
-const studentSchema = new Schema<StudentPorps>(
+const studentSchema = new Schema<StudentProps>(
   {
     id: {
       type: String,
       required: true,
+    },
+    password: {
+      type: String,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User is required'],
+      unique: true,
+      ref: 'User',
     },
     name: {
       type: usernameSchema,
@@ -112,32 +120,17 @@ const studentSchema = new Schema<StudentPorps>(
   },
 );
 
-// middlewares
-
-// // hashing password
-// studentSchema.pre('save', async function (next) {
-//   const student = this;
-//   student.password = await bcrypt.hash(
-//     student.password,
-//     Number(config.bcrypt_salt_rounds),
-//   );
-//   next();
-// });
-// studentSchema.post('save', function (doc, next) {
-//   doc.password = '';
-//   next();
-// });
-
 // filter out deleted data
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
+
 studentSchema.pre('findOne', function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
-// [ {$match: { idDeleted: { $ne: true} } }, { '$match': { _id: new ObjectId('6652826feb23496541b9602a') } } ]
+
 studentSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
@@ -148,4 +141,4 @@ studentSchema.virtual('fullName').get(function () {
   return this.name.firstName + ' ' + this.name.lastName;
 });
 
-export const StudentModel = model<StudentPorps>('Student', studentSchema);
+export const StudentModel = model<StudentProps>('Student', studentSchema);

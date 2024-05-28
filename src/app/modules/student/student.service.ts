@@ -1,12 +1,5 @@
 import mongoose, { ObjectId } from 'mongoose';
-import { Student } from './student.interface';
 import { StudentModel } from './student.model';
-
-// Create a new student
-const createStudentIntoDB = async (student: Student) => {
-  const result = await StudentModel.create(student); // Built-in static method
-  return result;
-};
 
 // Get all students
 const getAllStudentsFromDB = async () => {
@@ -34,6 +27,5 @@ const deleteStudentById = async (studentId: string) => {
 export const StudentService = {
   getAllStudentsFromDB,
   getStudentByIdFromDB,
-  createStudentIntoDB,
   deleteStudentById,
 };
