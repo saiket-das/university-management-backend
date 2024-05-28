@@ -95,7 +95,7 @@ const studentSchema = new Schema<StudentProps>(
       maxlength: 20,
       required: true,
     },
-    dateOfBirth: { type: String, required: true },
+    dateOfBirth: { type: Date, required: true },
     contactNumber: { type: String, required: true },
     emergencyContactNumber: { type: String, required: true },
     presentAddress: { type: String, required: true },
@@ -137,8 +137,8 @@ studentSchema.pre('aggregate', function (next) {
 });
 
 // virtual
-studentSchema.virtual('fullName').get(function () {
-  return this.name.firstName + ' ' + this.name.lastName;
-});
+// studentSchema.virtual('fullName').get(function () {
+//   return this.name.firstName + ' ' + this.name.lastName;
+// });
 
 export const StudentModel = model<StudentProps>('Student', studentSchema);

@@ -28,7 +28,7 @@ export interface StudentProps {
   name: UserNameProps;
   email: string;
   gender: 'male' | 'female' | 'others';
-  dateOfBirth: string;
+  dateOfBirth: Date;
   contactNumber: string;
   emergencyContactNumber: string;
   presentAddress: string;

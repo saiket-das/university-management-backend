@@ -79,7 +79,7 @@ export const createStudentValidationSchema = z.object({
         .string({ message: 'Email is required' })
         .email({ message: 'Email must be a valid email' }),
       gender: z.enum(['male', 'female', 'others']),
-      dateOfBirth: z.string(),
+      dateOfBirth: z.date().optional(),
       contactNumber: z.string().regex(/^[+0-9]+$/),
       emergencyContactNumber: z.string().regex(/^[+0-9]+$/),
       presentAddress: z.string(),
