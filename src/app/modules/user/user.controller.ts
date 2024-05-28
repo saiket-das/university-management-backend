@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from 'express';
 import { UserServices } from './user.service';
 import { StudentProps } from '../student/student.interface';
 import { StudentValidation } from '../student/student.validation';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status';
 
 // Create a new student
 const createStudent = async (
@@ -20,9 +22,10 @@ const createStudent = async (
       studentData,
     );
 
-    res.status(200).json({
+    sendResponse(res, {
       success: true,
-      message: 'Student is created successfully ',
+      statusCode: httpStatus.OK,
+      message: 'Student create successfully!',
       data: result,
     });
   } catch (error) {
