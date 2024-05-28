@@ -18,7 +18,7 @@ export type MonthsProps =
 export interface AcademicSemesterProps {
   name: AcademicSemesterNameProps;
   code: AcademicSemesterCodeProps;
-  year: Date;
+  year: String;
   startMonth: MonthsProps;
   endMonth: MonthsProps;
 }

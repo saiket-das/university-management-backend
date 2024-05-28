@@ -24,7 +24,7 @@ const academicSemesterSchema = new Schema<AcademicSemesterProps>(
       required: true,
     },
     year: {
-      type: Date,
+      type: String,
       required: true,
     },
     startMonth: {
@@ -44,6 +44,6 @@ const academicSemesterSchema = new Schema<AcademicSemesterProps>(
 );
 
 export const academicSemesterModel = model<AcademicSemesterProps>(
-  'AcademicSemester',
+  'Academic-Semester',
   academicSemesterSchema,
 );
