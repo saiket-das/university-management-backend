@@ -1,8 +1,11 @@
+export type AcademicSemesterNameProps = 'Autumn' | 'Summer' | 'Fall';
+export type AcademicSemesterCodeProps = '01' | '02' | '03';
+
 export type MonthsProps =
   | 'January'
   | 'February'
-  | 'March'
   | 'April'
+  | 'March'
   | 'May'
   | 'June'
   | 'July'
@@ -13,8 +16,8 @@ export type MonthsProps =
   | 'December';
 
 export interface AcademicSemesterProps {
-  name: 'Autumn' | 'Summer' | 'Fall';
-  code: '01' | '02' | '03 ';
+  name: AcademicSemesterNameProps;
+  code: AcademicSemesterCodeProps;
   year: Date;
   startMonth: MonthsProps;
   endMonth: MonthsProps;
