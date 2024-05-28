@@ -1,8 +1,12 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StudentService } from './student.service';
 
 // Get all students
-const getAllStudents = async (req: Request, res: Response) => {
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await StudentService.getAllStudentsFromDB();
 
@@ -12,15 +16,16 @@ const getAllStudents = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: true,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
 // Get student by Id
-const getStudentbyId = async (req: Request, res: Response) => {
+const getStudentbyId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { studentId } = req.params;
     const result = await StudentService.getStudentByIdFromDB(studentId);
@@ -31,15 +36,16 @@ const getStudentbyId = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: true,
-      message: error,
-    });
+    next(error);
   }
 };
 
 // Delete student by Id
-const deleteStudentById = async (req: Request, res: Response) => {
+const deleteStudentById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { studentId } = req.params;
     const result = await StudentService.deleteStudentById(studentId);
@@ -50,10 +56,7 @@ const deleteStudentById = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: true,
-      message: error,
-    });
+    next(error);
   }
 };
 

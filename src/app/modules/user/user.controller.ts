@@ -1,13 +1,19 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { UserServices } from './user.service';
 import { StudentProps } from '../student/student.interface';
+import { StudentValidation } from '../student/student.validation';
 
 // Create a new student
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { password, student: studentData } = req.body;
-    // const zodParseData = UserValidation.userSchemaValidation.parse(studentData);
+    // const studentParseData =
+    // StudentValidation.studentSchemaValidation.parse(studentData);
 
     const result = await UserServices.createStudentService(
       password,
@@ -20,10 +26,7 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: true,
-      message: error,
-    });
+    next(error);
   }
 };
 
