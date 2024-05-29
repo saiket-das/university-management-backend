@@ -16,13 +16,14 @@ export type MonthsProps =
   | 'December';
 
 // Autumn: '01', Summer: '02', Fall: '03';
-export interface NameCodeMapperProps {
-  [key: string]: string;
-}
 export interface AcademicSemesterProps {
   name: AcademicSemesterNameProps;
   code: AcademicSemesterCodeProps;
   year: String;
   startMonth: MonthsProps;
   endMonth: MonthsProps;
+}
+
+export interface NameCodeMapperProps {
+  [key: string]: string;
 }

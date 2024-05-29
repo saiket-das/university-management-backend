@@ -2,6 +2,7 @@ import {
   AcademicSemesterCodeProps,
   AcademicSemesterNameProps,
   MonthsProps,
+  NameCodeMapperProps,
 } from './academicSemester.interface';
 
 export const Months: MonthsProps[] = [
@@ -30,3 +31,10 @@ export const AcademicSemesterCode: AcademicSemesterCodeProps[] = [
   '02',
   '03',
 ];
+
+// semester name === semester code (exmple -> (Autumn === 01, Summer === 02 & Fall === 03))
+export const academicSemesterNameCodeMapper: NameCodeMapperProps = {
+  Autumn: '01',
+  Summer: '02',
+  Fall: '03',
+};
