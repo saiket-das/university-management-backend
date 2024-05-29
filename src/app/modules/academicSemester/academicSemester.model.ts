@@ -1,10 +1,5 @@
 import { model, Schema } from 'mongoose';
-import {
-  AcademicSemesterCodeProps,
-  AcademicSemesterNameProps,
-  AcademicSemesterProps,
-  MonthsProps,
-} from './academicSemester.interface';
+import { AcademicSemesterProps } from './academicSemester.interface';
 import {
   AcademicSemesterName,
   AcademicSemesterCode,
@@ -42,6 +37,20 @@ const academicSemesterSchema = new Schema<AcademicSemesterProps>(
     timestamps: true,
   },
 );
+
+// pre validation before create a semester (can't create same name and year semester twice)
+// example -> Autumn 2025 can be only once
+academicSemesterSchema.pre('save', async function (next) {
+  const isSemesterExists = await academicSemesterModel.findOne({
+    name: this.name,
+    year: this.year,
+  });
+
+  if (isSemesterExists) {
+    throw new Error(`${this.name} ${this.year} semester already exists!`);
+  }
+  next();
+});
 
 export const academicSemesterModel = model<AcademicSemesterProps>(
   'Academic-Semester',

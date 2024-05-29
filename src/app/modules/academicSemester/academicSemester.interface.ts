@@ -15,6 +15,10 @@ export type MonthsProps =
   | 'November'
   | 'December';
 
+// Autumn: '01', Summer: '02', Fall: '03';
+export interface NameCodeMapperProps {
+  [key: string]: string;
+}
 export interface AcademicSemesterProps {
   name: AcademicSemesterNameProps;
   code: AcademicSemesterCodeProps;
