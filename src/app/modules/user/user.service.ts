@@ -5,7 +5,7 @@ import { StudentProps } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';
 import { UserProps } from './user.interface';
 import { UserModel } from './user.model';
-import { generateStudentId } from './user.utils';
+import { generateUserId } from './user.utils';
 
 // Create a new student
 const createStudentService = async (
@@ -23,10 +23,15 @@ const createStudentService = async (
     payload.admissionSemester,
   );
   // generate a user id (expmple: 2025010000) and set as user id
-  userData.id = await generateStudentId(
+  userData.id = await generateUserId(
     admissionSemester as AcademicSemesterProps,
   );
-  console.log(userData.id);
+
+  // check if student (email) already exists or not
+  const studentExists = await StudentModel.findOne({ email: payload.email });
+  if (studentExists) {
+    throw new Error(`Student already exist with ${payload.email} email`);
+  }
 
   // create a user
   const newUser = await UserModel.create(userData);

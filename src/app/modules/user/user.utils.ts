@@ -18,14 +18,27 @@ const findLastStudentById = async () => {
   console.log(lastStudent);
 
   // 202403   0001
-  return lastStudent?.id ? lastStudent.id.substring(6) : undefined;
+  return lastStudent?.id ? lastStudent.id : undefined;
 };
+
 // generate a user id (semester year + academic code + 4 digit number) expmple -> (2025010000)
-export const generateStudentId = async (payload: AcademicSemesterProps) => {
-  console.log('Last digit:', await findLastStudentById());
-  const currentId = (await findLastStudentById()) || (0).toString();
+export const generateUserId = async (payload: AcademicSemesterProps) => {
+  const lastStudentId = await findLastStudentById();
+
+  let currentId = (0).toString();
+  if (lastStudentId) {
+    const lastStudentSemesterYear = lastStudentId.substring(0, 4); // 2024
+    const lastStudentSemesterCode = lastStudentId.substring(4, 6); // 02
+    if (
+      lastStudentId &&
+      payload.year === lastStudentSemesterYear &&
+      payload.code === lastStudentSemesterCode
+    ) {
+      currentId = lastStudentId.substring(6);
+    }
+  }
+
   const incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
   const newUserId = `${payload.year}${payload.code}${incrementId}`;
-  console.log('New student id:', newUserId);
   return newUserId;
 };
