@@ -11,6 +11,7 @@ const academicDepartmentSchema = new Schema<AcademicDepartmentProps>(
     academicFaculty: {
       type: String,
       required: true,
+      ref: 'Academic-Faculty',
     },
   },
   {
