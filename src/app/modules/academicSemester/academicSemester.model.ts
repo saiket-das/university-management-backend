@@ -41,7 +41,7 @@ const academicSemesterSchema = new Schema<AcademicSemesterProps>(
 // pre validation before create a semester (can't create same name and year semester twice)
 // example -> Autumn 2025 can be only once
 academicSemesterSchema.pre('save', async function (next) {
-  const isSemesterExists = await academicSemesterModel.findOne({
+  const isSemesterExists = await AcademicSemesterModel.findOne({
     name: this.name,
     year: this.year,
   });
@@ -52,7 +52,7 @@ academicSemesterSchema.pre('save', async function (next) {
   next();
 });
 
-export const academicSemesterModel = model<AcademicSemesterProps>(
+export const AcademicSemesterModel = model<AcademicSemesterProps>(
   'Academic-Semester',
   academicSemesterSchema,
 );

@@ -1,6 +1,6 @@
 import config from '../../config';
 import { AcademicSemesterProps } from '../academicSemester/academicSemester.interface';
-import { academicSemesterModel } from '../academicSemester/academicSemester.model';
+import { AcademicSemesterModel } from '../academicSemester/academicSemester.model';
 import { StudentProps } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';
 import { UserProps } from './user.interface';
@@ -19,7 +19,7 @@ const createStudentService = async (
   // set student role
   userData.role = 'student';
 
-  const admissionSemester = await academicSemesterModel.findById(
+  const admissionSemester = await AcademicSemesterModel.findById(
     payload.admissionSemester,
   );
   // generate a user id (expmple: 2025010000) and set as user id
