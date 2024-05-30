@@ -19,7 +19,7 @@ const academicDepartmentSchema = new Schema<AcademicDepartmentProps>(
   },
 );
 
-export const AcademicFacultyModel = model<AcademicDepartmentProps>(
+export const AcademicDepartmentModel = model<AcademicDepartmentProps>(
   'Academic-Department',
   academicDepartmentSchema,
 );
