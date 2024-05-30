@@ -24,7 +24,6 @@ export interface LocalGuardianProps {
 export interface StudentProps {
   id: string;
   password: string;
-  user: Types.ObjectId;
   name: UserNameProps;
   email: string;
   gender: 'male' | 'female' | 'others';
@@ -38,5 +37,7 @@ export interface StudentProps {
   bloodGroup?: 'A+' | 'B+' | 'O+' | 'AB+' | 'A-' | 'B-' | 'O-' | 'AB-';
   address: string;
   profileImage: string;
+  user: Types.ObjectId;
+  admissionSemester: Types.ObjectId;
   isDeleted?: boolean;
 }

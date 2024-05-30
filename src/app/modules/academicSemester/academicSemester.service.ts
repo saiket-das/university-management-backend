@@ -35,6 +35,13 @@ const updateAcademicSemesterByIdService = async (
   semesterId: string,
   payload: Partial<AcademicSemesterProps>,
 ) => {
+  if (
+    payload.name &&
+    payload.code &&
+    academicSemesterNameCodeMapper[payload.name] !== payload.code
+  ) {
+    throw new Error('Invalid Semester Code');
+  }
   const result = await academicSemesterModel.findOneAndUpdate(
     { _id: semesterId },
     payload,

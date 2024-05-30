@@ -67,16 +67,11 @@ const studentSchema = new Schema<StudentProps>(
   {
     id: {
       type: String,
+      unique: true,
       required: true,
     },
     password: {
       type: String,
-    },
-    user: {
-      type: Schema.Types.ObjectId,
-      required: [true, 'User is required'],
-      unique: true,
-      ref: 'User',
     },
     name: {
       type: usernameSchema,
@@ -111,6 +106,17 @@ const studentSchema = new Schema<StudentProps>(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User is required'],
+      unique: true,
+      ref: 'User',
+    },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'Academic semester is reuqired'],
+      ref: 'academic-semester',
     },
   },
   {

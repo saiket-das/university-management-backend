@@ -11,9 +11,6 @@ const usernameValidationSchema = z.object({
       message: 'Firstname can only contain alphabetic characters',
     }),
   lastName: z.string().max(20, { message: 'Firstname is required' }),
-  // .regex(/^[A-Za-z]+$/, {
-  //   message: 'Lastname can only contain alphabetic characters',
-  // }),
 });
 
 const guardianValidationSchema = z.object({
@@ -79,7 +76,7 @@ export const createStudentValidationSchema = z.object({
         .string({ message: 'Email is required' })
         .email({ message: 'Email must be a valid email' }),
       gender: z.enum(['male', 'female', 'others']),
-      dateOfBirth: z.date().optional(),
+      dateOfBirth: z.string().optional(),
       contactNumber: z.string().regex(/^[+0-9]+$/),
       emergencyContactNumber: z.string().regex(/^[+0-9]+$/),
       presentAddress: z.string(),
@@ -87,6 +84,7 @@ export const createStudentValidationSchema = z.object({
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
+      admissionSemester: z.string(),
       profileImage: z
         .string()
         .url({ message: 'Profile image must be a valid URL' }),

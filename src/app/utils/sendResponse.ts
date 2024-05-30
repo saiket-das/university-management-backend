@@ -11,7 +11,7 @@ const sendResponse = <T>(res: Response, data: ResponseProps<T>) => {
   res.status(data.statusCode).json({
     success: data.success,
     message: data.message,
-    daat: data.data,
+    data: data.data,
   });
 };
 
