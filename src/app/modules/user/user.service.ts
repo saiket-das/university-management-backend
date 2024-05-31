@@ -30,7 +30,7 @@ const createStudentService = async (
   // check if student (email) already exists or not
   const studentExists = await StudentModel.findOne({ email: payload.email });
   if (studentExists) {
-    throw new Error(`Student already exist with ${payload.email} email`);
+    throw new Error(`Student already exists with ${payload.email} email`);
   }
 
   // create a user
