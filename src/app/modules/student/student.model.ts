@@ -116,7 +116,12 @@ const studentSchema = new Schema<StudentProps>(
     admissionSemester: {
       type: Schema.Types.ObjectId,
       required: [true, 'Academic semester is reuqired'],
-      ref: 'academic-semester',
+      ref: 'Academic-Semester',
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'Academic department is reuqired'],
+      ref: 'Academic-Department',
     },
   },
   {

@@ -2,21 +2,33 @@ import mongoose, { ObjectId } from 'mongoose';
 import { StudentModel } from './student.model';
 
 // Get all students
-const getAllStudentsFromDB = async () => {
-  const result = await StudentModel.find();
+const getAllStudentsService = async () => {
+  const result = await StudentModel.find()
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
   return result;
 };
 
 // Get student by Id
-const getStudentByIdFromDB = async (studentId: string) => {
-  const result = await StudentModel.aggregate([
-    { $match: { _id: new mongoose.Types.ObjectId(studentId) } },
-  ]);
+const getSingleStudentByIdService = async (studentId: string) => {
+  const result = await StudentModel.findById(studentId)
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
   return result;
 };
 
 // Get student by Id
-const deleteStudentById = async (studentId: string) => {
+const deleteStudentByIdService = async (studentId: string) => {
   const result = await StudentModel.updateOne(
     { _id: studentId },
     { $set: { isDeleted: true } },
@@ -25,7 +37,7 @@ const deleteStudentById = async (studentId: string) => {
 };
 
 export const StudentService = {
-  getAllStudentsFromDB,
-  getStudentByIdFromDB,
-  deleteStudentById,
+  getAllStudentsService,
+  getSingleStudentByIdService,
+  deleteStudentByIdService,
 };

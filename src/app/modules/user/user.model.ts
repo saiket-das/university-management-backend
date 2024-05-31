@@ -37,9 +37,8 @@ const userSchema = new Schema<UserProps>(
   },
 );
 
-// middlewares
-
-// hashing password
+// Middlewares
+// Hashing password
 userSchema.pre('save', async function (next) {
   const student = this;
   student.password = await bcrypt.hash(
@@ -49,7 +48,7 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// send user empty password after hasshing
+// Send user empty password after hasshing
 userSchema.post('save', function (doc, next) {
   doc.password = '';
   next();

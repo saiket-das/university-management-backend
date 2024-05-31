@@ -85,6 +85,7 @@ export const createStudentValidationSchema = z.object({
       localGuardian: localGuardianValidationSchema,
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
       admissionSemester: z.string(),
+      academicDepartment: z.string(),
       profileImage: z
         .string()
         .url({ message: 'Profile image must be a valid URL' }),

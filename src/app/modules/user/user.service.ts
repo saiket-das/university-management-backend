@@ -12,6 +12,12 @@ const createStudentService = async (
   password: string,
   payload: StudentProps,
 ) => {
+  // check if student (email) already exists or not
+  const isStudentExists = await StudentModel.findOne({ email: payload.email });
+  if (isStudentExists) {
+    throw new Error(`Student already exists with ${payload.email} email`);
+  }
+
   // create a user object
   const userData: Partial<UserProps> = {};
   // if password is not given, use default password
@@ -26,12 +32,6 @@ const createStudentService = async (
   userData.id = await generateUserId(
     admissionSemester as AcademicSemesterProps,
   );
-
-  // check if student (email) already exists or not
-  const studentExists = await StudentModel.findOne({ email: payload.email });
-  if (studentExists) {
-    throw new Error(`Student already exists with ${payload.email} email`);
-  }
 
   // create a user
   const newUser = await UserModel.create(userData);

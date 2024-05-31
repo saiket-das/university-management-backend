@@ -39,5 +39,6 @@ export interface StudentProps {
   profileImage: string;
   user: Types.ObjectId;
   admissionSemester: Types.ObjectId;
+  academicDepartment: Types.ObjectId;
   isDeleted?: boolean;
 }

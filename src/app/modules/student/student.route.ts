@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', StudentControllers.getAllStudents);
 
 // Fetch single student by Id
-router.get('/:studentId', StudentControllers.getStudentbyId);
+router.get('/:studentId', StudentControllers.getSingleStudentbyId);
 
 // Delete single student by Id
 router.delete('/:studentId', StudentControllers.deleteStudentById);

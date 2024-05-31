@@ -5,7 +5,7 @@ import catachAsync from '../../utils/catchAsync';
 
 // Get all students
 const getAllStudents = catachAsync(async (req, res, next) => {
-  const result = await StudentService.getAllStudentsFromDB();
+  const result = await StudentService.getAllStudentsService();
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -15,9 +15,9 @@ const getAllStudents = catachAsync(async (req, res, next) => {
 });
 
 // Get student by Id
-const getStudentbyId = catachAsync(async (req, res, next) => {
+const getSingleStudentbyId = catachAsync(async (req, res, next) => {
   const { studentId } = req.params;
-  const result = await StudentService.getStudentByIdFromDB(studentId);
+  const result = await StudentService.getSingleStudentByIdService(studentId);
 
   sendResponse(res, {
     success: true,
@@ -30,7 +30,7 @@ const getStudentbyId = catachAsync(async (req, res, next) => {
 // Delete student by Id
 const deleteStudentById = catachAsync(async (req, res, next) => {
   const { studentId } = req.params;
-  const result = await StudentService.deleteStudentById(studentId);
+  const result = await StudentService.deleteStudentByIdService(studentId);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -41,6 +41,6 @@ const deleteStudentById = catachAsync(async (req, res, next) => {
 
 export const StudentControllers = {
   getAllStudents,
-  getStudentbyId,
+  getSingleStudentbyId,
   deleteStudentById,
 };

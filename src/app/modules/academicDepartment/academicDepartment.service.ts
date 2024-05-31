@@ -1,7 +1,8 @@
+import { AcademicFacultyModel } from '../academicFaculty/academicFaculty.model';
 import { AcademicDepartmentProps } from './academicDepartment.interface';
 import { AcademicDepartmentModel } from './academicDepartment.model';
 
-// Create a academic department
+// create a academic department
 const createAcademicDepartmentService = async (
   payload: AcademicDepartmentProps,
 ) => {
@@ -9,23 +10,32 @@ const createAcademicDepartmentService = async (
   return result;
 };
 
-// Fetch all academic departments
+// fetch all academic departments
 const getAllAcademicDepartmentsService = async () => {
-  const result = await AcademicDepartmentModel.find();
+  const result =
+    await AcademicDepartmentModel.find().populate('academicFaculty');
   return result;
 };
 
-// Fetch single academic department by Id
+// fetch single academic department by Id
 const getSingleAcademicDepartmentByIdService = async (departmentId: string) => {
   const result = await AcademicDepartmentModel.findById(departmentId);
   return result;
 };
 
-// Update single academic department's info by Id
+// update single academic department's info by Id
 const updateAcademicDepartmentByIdService = async (
   departmentId: string,
   payload: Partial<AcademicDepartmentProps>,
 ) => {
+  // check if academic department (name) exists or not  (try to use 'pre' middleware hook but got some issues)
+  const isAcademicDepartmentExists = await AcademicDepartmentModel.findOne({
+    name: payload.name,
+  });
+  if (isAcademicDepartmentExists) {
+    throw new Error(`${payload.name} already exists`);
+  }
+
   const result = await AcademicDepartmentModel.findOneAndUpdate(
     { _id: departmentId },
     payload,
