@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 import { AcademicFacultyModel } from '../academicFaculty/academicFaculty.model';
 import { AcademicDepartmentProps } from './academicDepartment.interface';
 import { AcademicDepartmentModel } from './academicDepartment.model';
@@ -33,7 +35,7 @@ const updateAcademicDepartmentByIdService = async (
     name: payload.name,
   });
   if (isAcademicDepartmentExists) {
-    throw new Error(`${payload.name} already exists`);
+    throw new AppError(httpStatus.NOT_FOUND, `${payload.name} already exists`);
   }
 
   const result = await AcademicDepartmentModel.findOneAndUpdate(

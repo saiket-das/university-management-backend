@@ -14,7 +14,7 @@ const getAllStudents = catachAsync(async (req, res, next) => {
   });
 });
 
-// Get student by Id
+// Get single tudent by Id
 const getSingleStudentbyId = catachAsync(async (req, res, next) => {
   const { studentId } = req.params;
   const result = await StudentService.getSingleStudentByIdService(studentId);
@@ -27,7 +27,7 @@ const getSingleStudentbyId = catachAsync(async (req, res, next) => {
   });
 });
 
-// Delete student by Id
+// Delete a student info by Id
 const deleteStudentById = catachAsync(async (req, res, next) => {
   const { studentId } = req.params;
   const result = await StudentService.deleteStudentByIdService(studentId);

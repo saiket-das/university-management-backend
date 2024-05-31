@@ -1,6 +1,8 @@
 import { model, Schema } from 'mongoose';
 import { AcademicDepartmentProps } from './academicDepartment.interface';
 import { AcademicFacultyModel } from '../academicFaculty/academicFaculty.model';
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 
 const academicDepartmentSchema = new Schema<AcademicDepartmentProps>(
   {
@@ -29,7 +31,10 @@ academicDepartmentSchema.pre('save', async function (next) {
     name: academicDepartment.name,
   });
   if (isAcademicDepartmentExists) {
-    throw new Error(`${academicDepartment.name} already exists`);
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      `${academicDepartment.name} already exists`,
+    );
   }
 
   // check if reference academic faculty exists or not
@@ -37,7 +42,10 @@ academicDepartmentSchema.pre('save', async function (next) {
     academicDepartment.academicFaculty,
   );
   if (!isAcademicFacultyExists) {
-    throw new Error("Academic department doesn't exists");
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Academic department doesn't exists",
+    );
   }
   next();
 });
@@ -47,7 +55,10 @@ academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery(); // {_id: '665822af08051........'}
   const isAcademicFacultyExists = await AcademicDepartmentModel.findOne(query);
   if (!isAcademicFacultyExists) {
-    throw new Error("Academic department doesn't exists");
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Academic department doesn't exists",
+    );
   }
   next();
 });

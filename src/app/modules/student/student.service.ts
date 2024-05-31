@@ -14,7 +14,7 @@ const getAllStudentsService = async () => {
   return result;
 };
 
-// Get student by Id
+// Get single student by Id
 const getSingleStudentByIdService = async (studentId: string) => {
   const result = await StudentModel.findById(studentId)
     .populate('admissionSemester')
@@ -27,7 +27,7 @@ const getSingleStudentByIdService = async (studentId: string) => {
   return result;
 };
 
-// Get student by Id
+// Delete s student info by Id
 const deleteStudentByIdService = async (studentId: string) => {
   const result = await StudentModel.updateOne(
     { _id: studentId },
