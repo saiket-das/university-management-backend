@@ -17,10 +17,8 @@ const createStudentService = async (
 ) => {
   // create a user object
   const userData: Partial<UserProps> = {};
-  // if password is not given, use default password
-  userData.password = password || (config.default_password as string);
-  // set student role
-  userData.role = 'student';
+  userData.password = password || (config.default_password as string); // if password is not given, use default password
+  userData.role = 'student'; // set student role
 
   const admissionSemester = await AcademicSemesterModel.findById(
     payload.admissionSemester,
@@ -60,11 +58,6 @@ const createStudentService = async (
       'An error occurred while creating the new user!',
     );
   }
-
-  // throw new AppError(
-  //   httpStatus.NOT_FOUND,
-  //   'An error occurred while creating the new user!',
-  // );
 };
 
 export const UserServices = {

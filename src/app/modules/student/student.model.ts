@@ -103,10 +103,6 @@ const studentSchema = new Schema<StudentProps>(
       required: true,
     },
     profileImage: { type: String, required: true },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, 'User is required'],
@@ -122,6 +118,10 @@ const studentSchema = new Schema<StudentProps>(
       type: Schema.Types.ObjectId,
       required: [true, 'Academic department is reuqired'],
       ref: 'Academic-Department',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
   {
