@@ -1,10 +1,12 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import {
   GuardianProps,
   LocalGuardianProps,
   StudentProps,
   UserNameProps,
 } from './student.interface';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const usernameSchema = new Schema<UserNameProps>({
   firstName: {

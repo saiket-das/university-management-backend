@@ -34,6 +34,7 @@ const createStudentService = async (
 
     // create a user  (transaction-1)
     const newUser = await UserModel.create([userData], { session }); // return array
+    console.log('New user: ', newUser);
 
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create new user!');
@@ -43,7 +44,7 @@ const createStudentService = async (
     payload.user = newUser[0]._id; //reference _id
 
     // create a student  (transaction-2)
-    const newStudent = await StudentModel.create([payload, session]);
+    const newStudent = await StudentModel.create([payload], { session });
     if (!newStudent.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create new student!');
     }

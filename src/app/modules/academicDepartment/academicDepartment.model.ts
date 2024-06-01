@@ -42,10 +42,7 @@ academicDepartmentSchema.pre('save', async function (next) {
     academicDepartment.academicFaculty,
   );
   if (!isAcademicFacultyExists) {
-    throw new AppError(
-      httpStatus.NOT_FOUND,
-      "Academic department doesn't exists",
-    );
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found!');
   }
   next();
 });
@@ -55,10 +52,7 @@ academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery(); // {_id: '665822af08051........'}
   const isAcademicFacultyExists = await AcademicDepartmentModel.findOne(query);
   if (!isAcademicFacultyExists) {
-    throw new AppError(
-      httpStatus.NOT_FOUND,
-      "Academic department doesn't exists",
-    );
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found!');
   }
   next();
 });

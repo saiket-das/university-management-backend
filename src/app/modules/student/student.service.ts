@@ -3,6 +3,7 @@ import { StudentModel } from './student.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { UserModel } from '../user/user.model';
+import { StudentProps } from './student.interface';
 
 // Get all students
 const getAllStudentsService = async () => {
@@ -19,7 +20,7 @@ const getAllStudentsService = async () => {
 
 // Get single student by Id
 const getSingleStudentByIdService = async (studentId: string) => {
-  const result = await StudentModel.findById(studentId)
+  const result = await StudentModel.findOne({ id: studentId })
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -30,8 +31,60 @@ const getSingleStudentByIdService = async (studentId: string) => {
   return result;
 };
 
-// Delete s student info by Id
+// Update a student info by Id
+const updateStudentByIdService = async (
+  studentId: string,
+  payload: Partial<StudentProps>,
+) => {
+  // handle non-primitive field here
+  /*
+    // from frontend
+    name: {
+      firstName: "Saiket"
+    }
+    // convert to this
+    name.firstName = "Saiket"
+  */
+  const { name, guardian, localGuardian, ...remainingData } = payload;
+
+  const modifyUpdatedData: Record<string, unknown> = {
+    ...remainingData,
+  };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifyUpdatedData[`name.${key}`] = value;
+    }
+  }
+
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifyUpdatedData[`guardian.${key}`] = value;
+    }
+  }
+
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifyUpdatedData[`localGuardian.${key}`] = value;
+    }
+  }
+
+  // update student info
+  const result = await StudentModel.findOneAndUpdate(
+    { id: studentId },
+    modifyUpdatedData,
+    { new: true, runValidators: true },
+  );
+  return result;
+};
+
+// Delete s student info (isDeleted = true) by Id
 const deleteStudentByIdService = async (studentId: string) => {
+  const isStudentExists = await StudentModel.findOne({ id: studentId });
+  if (!isStudentExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found'!);
+  }
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -72,5 +125,6 @@ const deleteStudentByIdService = async (studentId: string) => {
 export const StudentService = {
   getAllStudentsService,
   getSingleStudentByIdService,
+  updateStudentByIdService,
   deleteStudentByIdService,
 };

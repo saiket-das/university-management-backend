@@ -5,8 +5,8 @@ import catachAsync from '../../utils/catchAsync';
 
 // Create a new student
 const createStudent = catachAsync(async (req, res, next) => {
-  const { password, student: studentData } = req.body;
-  const result = await UserServices.createStudentService(password, studentData);
+  const { password, student: payload } = req.body;
+  const result = await UserServices.createStudentService(password, payload);
 
   sendResponse(res, {
     success: true,
