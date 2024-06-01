@@ -6,7 +6,6 @@ import catachAsync from '../../utils/catchAsync';
 // Create a new student
 const createStudent = catachAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
-  // const studentParseData = StudentValidation.studentSchemaValidation.parse(studentData);
   const result = await UserServices.createStudentService(password, studentData);
 
   sendResponse(res, {

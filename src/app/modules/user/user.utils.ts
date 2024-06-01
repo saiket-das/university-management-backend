@@ -15,7 +15,6 @@ const findLastStudentById = async () => {
       createdAt: -1,
     })
     .lean();
-  console.log(lastStudent);
 
   // 202403   0001
   return lastStudent?.id ? lastStudent.id : undefined;

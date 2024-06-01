@@ -1,10 +1,8 @@
-import { ObjectId } from 'mongoose';
 import { academicSemesterNameCodeMapper } from './academicSemester.constant';
-import {
-  AcademicSemesterProps,
-  NameCodeMapperProps,
-} from './academicSemester.interface';
+import { AcademicSemesterProps } from './academicSemester.interface';
 import { AcademicSemesterModel } from './academicSemester.model';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 // Create a new academic semester
 const createAcademicSemesterService = async (
@@ -12,7 +10,7 @@ const createAcademicSemesterService = async (
 ) => {
   // academicSemesterNameCodeMapper['Summer'] === '02'
   if (academicSemesterNameCodeMapper[payload.name] !== payload.code) {
-    throw new Error('Invalid semester code');
+    throw new AppError(httpStatus.NOT_FOUND, 'Invalid semester code');
   }
   const result = await AcademicSemesterModel.create(payload);
   return result;
@@ -40,7 +38,7 @@ const updateAcademicSemesterByIdService = async (
     payload.code &&
     academicSemesterNameCodeMapper[payload.name] !== payload.code
   ) {
-    throw new Error('Invalid Semester Code');
+    throw new AppError(httpStatus.NOT_FOUND, 'Invalid Semester Code');
   }
   const result = await AcademicSemesterModel.findOneAndUpdate(
     { _id: semesterId },
