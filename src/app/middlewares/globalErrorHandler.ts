@@ -2,7 +2,8 @@ import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
 import config from '../config';
 import { ErrorSourcesProps } from '../interfaces/error.interface';
-import { handleZodError } from '../errors/handleZodError';
+import handleZodError from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // default values
@@ -15,12 +16,19 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     },
   ];
 
-  // handle zod error
+  // handle zod validation error
   if (err instanceof ZodError) {
-    const simplifiedError = handleZodError(err);
-    satusCode = simplifiedError?.statusCode;
-    errorMessage = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
+    const simplifiedZodError = handleZodError(err);
+    satusCode = simplifiedZodError?.statusCode;
+    errorMessage = simplifiedZodError?.message;
+    errorSources = simplifiedZodError?.errorSources;
+  }
+  // handle mongoose validation error
+  else if (err?.name === 'ValidationError') {
+    const simplifiedMongooseError = handleValidationError(err);
+    satusCode = simplifiedMongooseError?.statusCode;
+    errorMessage = simplifiedMongooseError?.message;
+    errorSources = simplifiedMongooseError?.errorSources;
   }
 
   return res.status(satusCode).json({
@@ -36,10 +44,10 @@ export default globalErrorHandler;
 
 /* 
   -- Pattern --
-  success: true | false,
+  success: false,
   message: '....'
   errorSources: {
-    path: '/',
+    path: '....',
     message: '....'
   }
   stack: '/' [DEVELOPMENT]
