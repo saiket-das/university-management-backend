@@ -24,28 +24,28 @@ const academicDepartmentSchema = new Schema<AcademicDepartmentProps>(
 
 // Middlewares
 // Check if academic department (name) and reference academic faculty exists or not
-academicDepartmentSchema.pre('save', async function (next) {
-  const academicDepartment = this;
-  // check if academic department (name) exists or not
-  const isAcademicDepartmentExists = await AcademicDepartmentModel.findOne({
-    name: academicDepartment.name,
-  });
-  if (isAcademicDepartmentExists) {
-    throw new AppError(
-      httpStatus.NOT_FOUND,
-      `${academicDepartment.name} already exists`,
-    );
-  }
+// academicDepartmentSchema.pre('save', async function (next) {
+//   const academicDepartment = this;
+//   // check if academic department (name) exists or not
+//   const isAcademicDepartmentExists = await AcademicDepartmentModel.findOne({
+//     name: academicDepartment.name,
+//   });
+//   if (isAcademicDepartmentExists) {
+//     throw new AppError(
+//       httpStatus.NOT_FOUND,
+//       `${academicDepartment.name} already exists`,
+//     );
+//   }
 
-  // check if reference academic faculty exists or not
-  const isAcademicFacultyExists = await AcademicFacultyModel.findById(
-    academicDepartment.academicFaculty,
-  );
-  if (!isAcademicFacultyExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found!');
-  }
-  next();
-});
+//   // check if reference academic faculty exists or not
+//   const isAcademicFacultyExists = await AcademicFacultyModel.findById(
+//     academicDepartment.academicFaculty,
+//   );
+//   if (!isAcademicFacultyExists) {
+//     throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found!');
+//   }
+//   next();
+// });
 
 // Check if academic department exists or not before updating
 academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {

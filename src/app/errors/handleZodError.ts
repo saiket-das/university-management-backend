@@ -1,7 +1,10 @@
 import { ZodError, ZodIssue } from 'zod';
-import { ErrorSourcesProps } from '../interfaces/error.interface';
+import {
+  ErrorSourcesProps,
+  GenericErrorResponseProps,
+} from '../interfaces/error.interface';
 
-const handleZodError = (err: ZodError) => {
+const handleZodError = (err: ZodError): GenericErrorResponseProps => {
   const statusCode = 400;
   const errorSources: ErrorSourcesProps = err.issues.map((issue: ZodIssue) => {
     return {

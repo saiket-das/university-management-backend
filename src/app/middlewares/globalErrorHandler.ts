@@ -4,6 +4,8 @@ import config from '../config';
 import { ErrorSourcesProps } from '../interfaces/error.interface';
 import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
+import handleCastError from '../errors/handleCastError';
+import handleDuplicateError from '../errors/handleDuplicateError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // default values
@@ -25,10 +27,24 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
   // handle mongoose validation error
   else if (err?.name === 'ValidationError') {
-    const simplifiedMongooseError = handleValidationError(err);
-    satusCode = simplifiedMongooseError?.statusCode;
-    errorMessage = simplifiedMongooseError?.message;
-    errorSources = simplifiedMongooseError?.errorSources;
+    const simplifiedValidationError = handleValidationError(err);
+    satusCode = simplifiedValidationError?.statusCode;
+    errorMessage = simplifiedValidationError?.message;
+    errorSources = simplifiedValidationError?.errorSources;
+  }
+  // handle mongoose cast error
+  else if (err?.name === 'CastError') {
+    const simplifiedCastError = handleCastError(err);
+    satusCode = simplifiedCastError?.statusCode;
+    errorMessage = simplifiedCastError?.message;
+    errorSources = simplifiedCastError?.errorSources;
+  }
+  // handle mongoose 11000 error
+  else if (err?.code === 11000) {
+    const simplifiedDuplicateError = handleDuplicateError(err);
+    satusCode = simplifiedDuplicateError?.statusCode;
+    errorMessage = simplifiedDuplicateError?.message;
+    errorSources = simplifiedDuplicateError?.errorSources;
   }
 
   return res.status(satusCode).json({
@@ -36,7 +52,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     message: errorMessage,
     errorSources: errorSources,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
-    // error: err,
+    error: err,
   });
 };
 

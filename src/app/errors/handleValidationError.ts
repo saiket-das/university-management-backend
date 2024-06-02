@@ -1,7 +1,12 @@
 import { Error } from 'mongoose';
-import { ErrorSourcesProps } from '../interfaces/error.interface';
+import {
+  ErrorSourcesProps,
+  GenericErrorResponseProps,
+} from '../interfaces/error.interface';
 
-const handleValidationError = (err: Error.ValidationError) => {
+const handleValidationError = (
+  err: Error.ValidationError,
+): GenericErrorResponseProps => {
   const statusCode = 400;
   const errorSources: ErrorSourcesProps = Object.values(err.errors).map(
     (value: Error.ValidatorError | Error.CastError) => {
