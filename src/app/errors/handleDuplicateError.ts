@@ -3,9 +3,10 @@ import {
   ErrorSourcesProps,
   GenericErrorResponseProps,
 } from '../interfaces/error.interface';
+import httpStatus from 'http-status';
 
 const handleDuplicateError = (error: any): GenericErrorResponseProps => {
-  const statusCode = 400;
+  const statusCode = httpStatus.BAD_REQUEST;
   // const match = error?.errorResponse?.errmsg.match(/\"([^\"]*)\"/);
   // const extractedMessage = match ? match[1] : '';
 

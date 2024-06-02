@@ -30,14 +30,6 @@ const updateAcademicDepartmentByIdService = async (
   departmentId: string,
   payload: Partial<AcademicDepartmentProps>,
 ) => {
-  // check if academic department (name) exists or not  (try to use 'pre' middleware hook but got some issues)
-  const isAcademicDepartmentExists = await AcademicDepartmentModel.findOne({
-    name: payload.name,
-  });
-  if (isAcademicDepartmentExists) {
-    throw new AppError(httpStatus.NOT_FOUND, `${payload.name} already exists`);
-  }
-
   const result = await AcademicDepartmentModel.findOneAndUpdate(
     { _id: departmentId },
     payload,

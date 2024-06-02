@@ -3,9 +3,10 @@ import {
   ErrorSourcesProps,
   GenericErrorResponseProps,
 } from '../interfaces/error.interface';
+import httpStatus from 'http-status';
 
 const handleCastError = (error: Error.CastError): GenericErrorResponseProps => {
-  const statusCode = 400;
+  const statusCode = httpStatus.BAD_REQUEST;
   const errorSources: ErrorSourcesProps = [
     {
       path: error?.path,

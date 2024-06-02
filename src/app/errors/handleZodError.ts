@@ -3,9 +3,10 @@ import {
   ErrorSourcesProps,
   GenericErrorResponseProps,
 } from '../interfaces/error.interface';
+import httpStatus from 'http-status';
 
 const handleZodError = (err: ZodError): GenericErrorResponseProps => {
-  const statusCode = 400;
+  const statusCode = httpStatus.BAD_REQUEST;
   const errorSources: ErrorSourcesProps = err.issues.map((issue: ZodIssue) => {
     return {
       path: issue?.path[issue.path.length - 1],

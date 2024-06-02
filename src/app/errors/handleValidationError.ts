@@ -3,11 +3,12 @@ import {
   ErrorSourcesProps,
   GenericErrorResponseProps,
 } from '../interfaces/error.interface';
+import httpStatus from 'http-status';
 
 const handleValidationError = (
   err: Error.ValidationError,
 ): GenericErrorResponseProps => {
-  const statusCode = 400;
+  const statusCode = httpStatus.BAD_REQUEST;
   const errorSources: ErrorSourcesProps = Object.values(err.errors).map(
     (value: Error.ValidatorError | Error.CastError) => {
       return {

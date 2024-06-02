@@ -6,11 +6,12 @@ import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
+import AppError from '../errors/AppError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // default values
   let satusCode = 500;
-  let errorMessage = err.message || 'Something went wrong';
+  let errorMessage = 'Something went wrong';
   let errorSources: ErrorSourcesProps = [
     {
       path: '',
@@ -46,13 +47,24 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorMessage = simplifiedDuplicateError?.message;
     errorSources = simplifiedDuplicateError?.errorSources;
   }
+  // handle local appError
+  else if (err instanceof AppError) {
+    satusCode = err?.statusCode;
+    errorMessage = err?.message;
+    errorSources = [{ path: '', message: err?.message }];
+  }
+  // handle error
+  else if (err instanceof Error) {
+    errorMessage = err?.message;
+    errorSources = [{ path: '', message: err?.message }];
+  }
 
   return res.status(satusCode).json({
     success: false,
     message: errorMessage,
     errorSources: errorSources,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
-    error: err,
+    // err,
   });
 };
 
