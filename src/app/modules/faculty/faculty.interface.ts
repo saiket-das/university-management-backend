@@ -19,7 +19,7 @@ export interface FacultyProps {
   bloodGroup?: 'A+' | 'B+' | 'O+' | 'AB+' | 'A-' | 'B-' | 'O-' | 'AB-';
   profileImage: string;
   user: Types.ObjectId;
-  admissionFaculty: Types.ObjectId;
+  academicFaculty: Types.ObjectId;
   academicDepartment: Types.ObjectId;
   isDeleted?: boolean;
 }

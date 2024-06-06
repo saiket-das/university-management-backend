@@ -14,7 +14,7 @@ const getAllFacultiesService = async () => {
 // Get single faculty by Id
 const getSingleFacultyByIdService = async (facultyId: string) => {
   const result = await FacultyModel.findOne({ id: facultyId })
-    .populate('admissionSemester')
+    .populate('admissionFaculty')
     .populate({
       path: 'academicDepartment',
       populate: {

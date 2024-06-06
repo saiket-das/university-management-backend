@@ -62,7 +62,7 @@ const createStudentService = async (
   }
 };
 
-// Create a new student
+// Create a new faculty
 const createFacultyService = async (
   password: string,
   payload: FacultyProps,
@@ -84,7 +84,7 @@ const createFacultyService = async (
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new user!');
     }
-    // set id , _id as user
+    // set id , _id as user into facult
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
 
@@ -104,7 +104,7 @@ const createFacultyService = async (
     await session.endSession();
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'An error occurred while creating the new user!',
+      'An error occurred while creating the new user as faculty!',
     );
   }
 };

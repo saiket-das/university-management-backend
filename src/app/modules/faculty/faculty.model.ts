@@ -1,5 +1,11 @@
 import { model, Schema } from 'mongoose';
 import { FacultyProps, UserNameProps } from './faculty.interface';
+import { AcademicFacultyModel } from '../academicFaculty/academicFaculty.model';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
+import { AcademicDepartmentModel } from '../academicDepartment/academicDepartment.model';
+import { AcademicFacultyProps } from '../academicFaculty/academicFaculty.interface';
+import { AcademicDepartmentProps } from '../academicDepartment/academicDepartment.interface';
 
 const usernameSchema = new Schema<UserNameProps>({
   firstName: {
@@ -56,7 +62,7 @@ const facultySchema = new Schema<FacultyProps>(
       unique: true,
       ref: 'User',
     },
-    admissionFaculty: {
+    academicFaculty: {
       type: Schema.Types.ObjectId,
       required: [true, 'Academic faculty is reuqired'],
       ref: 'Academic-Faculty',
@@ -78,5 +84,37 @@ const facultySchema = new Schema<FacultyProps>(
     timestamps: true,
   },
 );
+
+// pre validation before create a faculty (check academic faculty & department exists or not )
+facultySchema.pre('save', async function (next) {
+  const facultyInfo = this;
+  // console.log(facultyInfo);
+
+  // check is academic faculty id valid or not
+  const isAcademicFacultyExists = await AcademicFacultyModel.findById(
+    facultyInfo.academicFaculty,
+  );
+
+  if (!isAcademicFacultyExists) {
+    console.log(isAcademicFacultyExists);
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Academic faculty does not exists!',
+    );
+  }
+
+  // check is academic department id valid or not
+  const isAcademicDepartmentExists = await AcademicDepartmentModel.findById(
+    facultyInfo.academicDepartment,
+  );
+
+  if (!isAcademicDepartmentExists) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Academic department does not exists!',
+    );
+  }
+  next();
+});
 
 export const FacultyModel = model<FacultyProps>('Faculty', facultySchema);

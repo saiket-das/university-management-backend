@@ -72,6 +72,5 @@ export const generateFacultyId = async () => {
 
   const incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
   const newUserId = `F-${incrementId}`;
-  console.log('New faculty id: ' + newUserId);
   return newUserId;
 };
