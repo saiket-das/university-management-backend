@@ -6,9 +6,11 @@ import { StudentProps } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';
 import { UserProps } from './user.interface';
 import { UserModel } from './user.model';
-import { generateUserId } from './user.utils';
+import { generateFacultyId, generateStudentId } from './user.utils';
 import AppError from '../../errors/AppError';
 import mongoose from 'mongoose';
+import { FacultyModel } from '../faculty/faculty.model';
+import { FacultyProps } from '../faculty/faculty.interface';
 
 // Create a new student
 const createStudentService = async (
@@ -28,7 +30,7 @@ const createStudentService = async (
   try {
     session.startTransaction();
     // generate a user id (expmple: 2025010000) and set as user id
-    userData.id = await generateUserId(
+    userData.id = await generateStudentId(
       admissionSemester as AcademicSemesterProps,
     );
 
@@ -60,6 +62,54 @@ const createStudentService = async (
   }
 };
 
+// Create a new student
+const createFacultyService = async (
+  password: string,
+  payload: FacultyProps,
+) => {
+  // create a user object
+  const userData: Partial<UserProps> = {};
+  userData.password = password || (config.default_password as string); // if password is not given, use default password
+  userData.role = 'faculty'; // set faculty role
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    // generate a user id (expmple: F-0001) and set as user id
+    userData.id = await generateFacultyId();
+
+    // create a user  (transaction-1)
+    const newUser = await UserModel.create([userData], { session }); // return array
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new user!');
+    }
+    // set id , _id as user
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id; //reference _id
+
+    // create a faculty  (transaction-2)
+    const newFaculty = await FacultyModel.create([payload], { session });
+    if (!newFaculty.length) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Fail to create a new faculty!',
+      );
+    }
+    await session.commitTransaction();
+    await session.endSession();
+    return newFaculty[0];
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'An error occurred while creating the new user!',
+    );
+  }
+};
+
 export const UserServices = {
   createStudentService,
+  createFacultyService,
 };

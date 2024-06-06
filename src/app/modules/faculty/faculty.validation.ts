@@ -15,7 +15,7 @@ const createUsernameValidationSchema = z.object({
 
 const createFacultyValidationSchema = z.object({
   body: z.object({
-    student: z.object({
+    faculty: z.object({
       name: createUsernameValidationSchema,
       email: z
         .string({ required_error: 'Email is required' })
@@ -27,7 +27,7 @@ const createFacultyValidationSchema = z.object({
       presentAddress: z.string(),
       permanentAddress: z.string(),
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
-      admissionSemester: z.string(),
+      admissionFaculty: z.string(),
       academicDepartment: z.string(),
       profileImage: z
         .string()
@@ -54,7 +54,7 @@ const updateUsernameValidationSchema = z.object({
 
 const updateFacultyValidationSchema = z.object({
   body: z.object({
-    student: z.object({
+    faculty: z.object({
       name: updateUsernameValidationSchema.optional(),
       email: z
         .string({ required_error: 'Email is required' })

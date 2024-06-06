@@ -11,11 +11,25 @@ const createStudent = catachAsync(async (req, res, next) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Student create successfully!',
+    message: 'Student created successfully!',
+    data: result,
+  });
+});
+
+// Create a new faculty
+const createFaculty = catachAsync(async (req, res, next) => {
+  const { password, faculty: payload } = req.body;
+  const result = await UserServices.createFacultyService(password, payload);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Faculty created successfully!',
     data: result,
   });
 });
 
 export const UserControllers = {
   createStudent,
+  createFaculty,
 };
