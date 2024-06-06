@@ -130,6 +130,7 @@ const studentSchema = new Schema<StudentProps>(
     toJSON: {
       virtuals: true,
     },
+    timestamps: true,
   },
 );
 

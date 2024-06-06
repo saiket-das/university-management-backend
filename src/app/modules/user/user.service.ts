@@ -34,7 +34,6 @@ const createStudentService = async (
 
     // create a user  (transaction-1)
     const newUser = await UserModel.create([userData], { session }); // return array
-    console.log('New user: ', newUser);
 
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create new user!');
