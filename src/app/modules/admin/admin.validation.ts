@@ -15,7 +15,7 @@ const createUsernameValidationSchema = z.object({
 
 const createAdminValidationSchema = z.object({
   body: z.object({
-    faculty: z.object({
+    admin: z.object({
       name: createUsernameValidationSchema,
       email: z
         .string({ required_error: 'Email is required' })
@@ -27,7 +27,6 @@ const createAdminValidationSchema = z.object({
       presentAddress: z.string(),
       permanentAddress: z.string(),
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
-      academicFaculty: z.string(),
       profileImage: z
         .string()
         .url({ message: 'Profile image must be a valid URL' }),
@@ -54,7 +53,7 @@ const updateUsernameValidationSchema = z.object({
 
 const updateAdminValidationSchema = z.object({
   body: z.object({
-    faculty: z.object({
+    admin: z.object({
       name: updateUsernameValidationSchema.optional(),
       email: z
         .string({ required_error: 'Email is required' })
@@ -85,7 +84,7 @@ const updateAdminValidationSchema = z.object({
   }),
 });
 
-export const FacultyValidations = {
+export const AdminValidations = {
   createAdminValidationSchema,
   updateAdminValidationSchema,
 };

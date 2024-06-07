@@ -6,11 +6,17 @@ import { StudentProps } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';
 import { UserProps } from './user.interface';
 import { UserModel } from './user.model';
-import { generateFacultyId, generateStudentId } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utils';
 import AppError from '../../errors/AppError';
 import mongoose from 'mongoose';
 import { FacultyModel } from '../faculty/faculty.model';
 import { FacultyProps } from '../faculty/faculty.interface';
+import { AdminProps } from '../admin/admin.interface';
+import { AdminModel } from '../admin/admin.model';
 
 // Create a new student
 const createStudentService = async (
@@ -109,7 +115,49 @@ const createFacultyService = async (
   }
 };
 
+// Create a new faculty
+const createAdminService = async (password: string, payload: AdminProps) => {
+  // create a user object
+  const userData: Partial<UserProps> = {};
+  userData.password = password || (config.default_password as string); // if password is not given, use default password
+  userData.role = 'admin'; // set faculty role
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    // generate a user id (expmple: F-0001) and set as user id
+    userData.id = await generateAdminId();
+
+    // create a user  (transaction-1)
+    const newUser = await UserModel.create([userData], { session }); // return array
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new user!');
+    }
+    // set id , _id as user into facult
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id; //reference _id
+
+    // create a faculty  (transaction-2)
+    const newAdmin = await AdminModel.create([payload], { session });
+    if (!newAdmin.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new admin!');
+    }
+    await session.commitTransaction();
+    await session.endSession();
+    return newAdmin[0];
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'An error occurred while creating the new user as admin!',
+    );
+  }
+};
+
 export const UserServices = {
   createStudentService,
   createFacultyService,
+  createAdminService,
 };

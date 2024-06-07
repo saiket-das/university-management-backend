@@ -1,6 +1,7 @@
 import { AcademicSemesterProps } from '../academicSemester/academicSemester.interface';
 import { UserModel } from './user.model';
 
+// generate a user id (semester year + academic code + 4 digit number) expmple -> (2025010000)
 const findLastStudentById = async () => {
   const lastStudent = await UserModel.findOne(
     {
@@ -20,7 +21,6 @@ const findLastStudentById = async () => {
   return lastStudent?.id ? lastStudent.id : undefined;
 };
 
-// generate a user id (semester year + academic code + 4 digit number) expmple -> (2025010000)
 export const generateStudentId = async (payload: AcademicSemesterProps) => {
   const lastStudentId = await findLastStudentById();
 
@@ -42,7 +42,8 @@ export const generateStudentId = async (payload: AcademicSemesterProps) => {
   return newUserId;
 };
 
-const findLastFacultById = async () => {
+// generate a user id (F- + 4 digit number) expmple -> (F-0001)
+const findLastFacultyId = async () => {
   const lastStudent = await UserModel.findOne(
     {
       role: 'faculty',
@@ -61,16 +62,48 @@ const findLastFacultById = async () => {
   return lastStudent?.id ? lastStudent.id : undefined;
 };
 
-// generate a user id (F- + 4 digit number) expmple -> (F-0001)
 export const generateFacultyId = async () => {
-  const lastFacultyId = await findLastFacultById();
-
   let currentId = (0).toString();
+
+  const lastFacultyId = await findLastFacultyId();
   if (lastFacultyId) {
     currentId = lastFacultyId.substring(2, 6); // 2024
   }
 
   const incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
   const newUserId = `F-${incrementId}`;
+  return newUserId;
+};
+
+// generate a user id (A- + 4 digit number) expmple -> (A-0001)
+const findLastAdminId = async () => {
+  const lastStudent = await UserModel.findOne(
+    {
+      role: 'admin',
+    },
+    {
+      id: 1,
+      _id: 0,
+    },
+  )
+    .sort({
+      createdAt: -1,
+    })
+    .lean();
+
+  // F-0001
+  return lastStudent?.id ? lastStudent.id : undefined;
+};
+export const generateAdminId = async () => {
+  let currentId = (0).toString();
+
+  // F-0001 || undefine
+  const lastAdminId = await findLastAdminId();
+  if (lastAdminId) {
+    currentId = lastAdminId.substring(2, 6); // 2024
+  }
+
+  const incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
+  const newUserId = `A-${incrementId}`;
   return newUserId;
 };

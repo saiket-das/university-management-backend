@@ -55,7 +55,6 @@ const adminSchema = new Schema<AdminProps>(
     profileImage: { type: String, required: true },
     user: {
       type: Schema.Types.ObjectId,
-      required: [true, 'User is required'],
       unique: true,
       ref: 'User',
     },

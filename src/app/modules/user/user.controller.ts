@@ -29,7 +29,21 @@ const createFaculty = catachAsync(async (req, res, next) => {
   });
 });
 
+// Create a new admin
+const createAdmin = catachAsync(async (req, res, next) => {
+  const { password, admin: payload } = req.body;
+  const result = await UserServices.createAdminService(password, payload);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Admin created successfully!',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createStudent,
   createFaculty,
+  createAdmin,
 };
