@@ -7,20 +7,17 @@ import { FacultyProps } from './faculty.interface';
 
 // Get all faculties
 const getAllFacultiesService = async () => {
-  const result = await FacultyModel.find();
+  const result = await FacultyModel.find()
+    .populate('academicFaculty')
+    .populate('academicDepartment');
   return result;
 };
 
 // Get single faculty by Id
 const getSingleFacultyByIdService = async (facultyId: string) => {
   const result = await FacultyModel.findOne({ id: facultyId })
-    .populate('admissionFaculty')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
+    .populate('academicFaculty')
+    .populate('academicDepartment');
   return result;
 };
 
@@ -30,7 +27,6 @@ const updateFacultyByIdService = async (
   payload: Partial<FacultyProps>,
 ) => {
   const { name, ...remainingData } = payload;
-
   const modifyUpdatedData: Record<string, unknown> = {
     ...remainingData,
   };

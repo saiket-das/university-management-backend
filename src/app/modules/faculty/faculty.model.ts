@@ -85,18 +85,26 @@ const facultySchema = new Schema<FacultyProps>(
   },
 );
 
-// pre validation before create a faculty (check academic faculty & department exists or not )
+// pre validation before create a faculty (check email unique or not and academic faculty & department exists or not )
 facultySchema.pre('save', async function (next) {
   const facultyInfo = this;
-  // console.log(facultyInfo);
+
+  // check email already exists or not
+  const isEmailExists = await FacultyModel.findOne({
+    email: facultyInfo.email,
+  });
+  if (isEmailExists) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      `${facultyInfo.email} email already exists!`,
+    );
+  }
 
   // check is academic faculty id valid or not
   const isAcademicFacultyExists = await AcademicFacultyModel.findById(
     facultyInfo.academicFaculty,
   );
-
   if (!isAcademicFacultyExists) {
-    console.log(isAcademicFacultyExists);
     throw new AppError(
       httpStatus.NOT_FOUND,
       'Academic faculty does not exists!',
@@ -107,7 +115,6 @@ facultySchema.pre('save', async function (next) {
   const isAcademicDepartmentExists = await AcademicDepartmentModel.findById(
     facultyInfo.academicDepartment,
   );
-
   if (!isAcademicDepartmentExists) {
     throw new AppError(
       httpStatus.NOT_FOUND,

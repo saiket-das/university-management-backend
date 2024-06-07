@@ -30,7 +30,7 @@ const getSingleFacultyById = catachAsync(async (req, res, next) => {
 // Update a faculty info by Id
 const updateFacultyById = catachAsync(async (req, res, next) => {
   const { facultyId } = req.params;
-  const { student: payload } = req.body;
+  const { faculty: payload } = req.body;
   const result = await FacultyService.updateFacultyByIdService(
     facultyId,
     payload,
