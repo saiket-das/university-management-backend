@@ -85,7 +85,7 @@ const deleteFacultyByIdService = async (studentId: string) => {
     await session.endSession();
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'An error occurred while deleting the new user!',
+      'An error occurred while deleting the user!',
     );
   }
 };
