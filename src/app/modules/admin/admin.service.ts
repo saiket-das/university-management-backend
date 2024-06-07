@@ -1,30 +1,29 @@
 import mongoose from 'mongoose';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
-import { FacultyModel } from './faculty.model';
+
 import { UserModel } from '../user/user.model';
-import { FacultyProps } from './faculty.interface';
+import { AdminModel } from './admin.model';
+import { AdminProps } from './admin.interface';
 
 // Get all faculties
-const getAllFacultiesService = async () => {
-  const result = await FacultyModel.find()
-    .populate('academicFaculty')
-    .populate('academicDepartment');
+const getAllAdminsService = async () => {
+  const result = await AdminModel.find().populate('managementDepartment');
   return result;
 };
 
 // Get single faculty by Id
-const getSingleFacultyByIdService = async (facultyId: string) => {
-  const result = await FacultyModel.findOne({ id: facultyId })
-    .populate('academicFaculty')
-    .populate('academicDepartment');
+const getSingleAdminByIdService = async (facultyId: string) => {
+  const result = await AdminModel.findOne({ id: facultyId }).populate(
+    'managementDepartment',
+  );
   return result;
 };
 
 // Update a faculty info by Id
-const updateFacultyByIdService = async (
+const updateAdminByIdService = async (
   facultyId: string,
-  payload: Partial<FacultyProps>,
+  payload: Partial<AdminProps>,
 ) => {
   const { name, ...remainingData } = payload;
   const modifyUpdatedData: Record<string, unknown> = {
@@ -38,7 +37,7 @@ const updateFacultyByIdService = async (
   }
 
   // update student info
-  const result = await FacultyModel.findOneAndUpdate(
+  const result = await AdminModel.findOneAndUpdate(
     { id: facultyId },
     modifyUpdatedData,
     { new: true, runValidators: true },
@@ -47,8 +46,8 @@ const updateFacultyByIdService = async (
 };
 
 // Delete s faculty info (isDeleted = true) by Id
-const deleteFacultyByIdService = async (facultyId: string) => {
-  const isStudentExists = await FacultyModel.findOne({ id: facultyId });
+const deleteAdminByIdService = async (adminId: string) => {
+  const isStudentExists = await AdminModel.findOne({ id: adminId });
   if (!isStudentExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found'!);
   }
@@ -58,8 +57,8 @@ const deleteFacultyByIdService = async (facultyId: string) => {
     session.startTransaction();
 
     // update user isDeleted property = true  (transaction-1)
-    const deletedStudent = await FacultyModel.findOneAndUpdate(
-      { id: facultyId },
+    const deletedStudent = await AdminModel.findOneAndUpdate(
+      { id: adminId },
       { $set: { isDeleted: true } },
       { new: true, session },
     );
@@ -68,7 +67,7 @@ const deleteFacultyByIdService = async (facultyId: string) => {
     }
 
     const deletedUser = await UserModel.findOneAndUpdate(
-      { id: facultyId },
+      { id: adminId },
       { $set: { isDeleted: true } },
       { new: true, session },
     );
@@ -85,14 +84,14 @@ const deleteFacultyByIdService = async (facultyId: string) => {
     await session.endSession();
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'An error occurred while deleting the user!',
+      'An error occurred while deleting the user as faculty!',
     );
   }
 };
 
-export const FacultyServices = {
-  getAllFacultiesService,
-  getSingleFacultyByIdService,
-  updateFacultyByIdService,
-  deleteFacultyByIdService,
+export const AdminServices = {
+  getAllAdminsService,
+  getSingleAdminByIdService,
+  updateAdminByIdService,
+  deleteAdminByIdService,
 };

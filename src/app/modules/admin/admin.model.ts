@@ -76,6 +76,12 @@ const adminSchema = new Schema<AdminProps>(
   },
 );
 
+// filter out deleted data
+adminSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
 // pre validation before create a faculty (check email unique or not and academic faculty & department exists or not )
 adminSchema.pre('save', async function (next) {
   const facultyInfo = this;

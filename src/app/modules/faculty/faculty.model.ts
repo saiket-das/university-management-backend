@@ -85,6 +85,12 @@ const facultySchema = new Schema<FacultyProps>(
   },
 );
 
+// filter out deleted data
+facultySchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
 // pre validation before create a faculty (check email unique or not and academic faculty & department exists or not )
 facultySchema.pre('save', async function (next) {
   const facultyInfo = this;
