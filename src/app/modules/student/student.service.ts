@@ -32,7 +32,7 @@ const getAllStudentsService = async (query: Record<string, unknown>) => {
 
 // Get single student by Id
 const getSingleStudentByIdService = async (studentId: string) => {
-  const result = await StudentModel.findOne({ id: studentId })
+  const result = await StudentModel.findById(studentId)
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -48,6 +48,12 @@ const updateStudentByIdService = async (
   studentId: string,
   payload: Partial<StudentProps>,
 ) => {
+  // Check is student exists or not
+  const isStudentExists = await StudentModel.findById(studentId);
+  if (!isStudentExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found'!);
+  }
+
   // handle non-primitive field here
   /*
     // from frontend
@@ -82,8 +88,8 @@ const updateStudentByIdService = async (
   }
 
   // update student info
-  const result = await StudentModel.findOneAndUpdate(
-    { id: studentId },
+  const result = await StudentModel.findByIdAndUpdate(
+    studentId,
     modifyUpdatedData,
     { new: true, runValidators: true },
   );
@@ -92,7 +98,8 @@ const updateStudentByIdService = async (
 
 // Delete s student info (isDeleted = true) by Id
 const deleteStudentByIdService = async (studentId: string) => {
-  const isStudentExists = await StudentModel.findOne({ id: studentId });
+  // Check is student exists or not
+  const isStudentExists = await StudentModel.findById(studentId);
   if (!isStudentExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student not found'!);
   }
@@ -101,9 +108,9 @@ const deleteStudentByIdService = async (studentId: string) => {
   try {
     session.startTransaction();
 
-    // update user isDeleted property = true  (transaction-1)
-    const deletedStudent = await StudentModel.findOneAndUpdate(
-      { id: studentId },
+    // update student isDeleted property = true  (transaction-1)
+    const deletedStudent = await StudentModel.findByIdAndUpdate(
+      studentId,
       { $set: { isDeleted: true } },
       { new: true, session },
     );
@@ -111,8 +118,10 @@ const deleteStudentByIdService = async (studentId: string) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to delete student!');
     }
 
+    // update user isDeleted property = true  (transaction-1)
+    const userId = deletedStudent.user;
     const deletedUser = await UserModel.findOneAndUpdate(
-      { id: studentId },
+      userId,
       { $set: { isDeleted: true } },
       { new: true, session },
     );
@@ -129,7 +138,7 @@ const deleteStudentByIdService = async (studentId: string) => {
     await session.endSession();
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'An error occurred while creating the new user!',
+      'An error occurred while deleting the user as student!',
     );
   }
 };

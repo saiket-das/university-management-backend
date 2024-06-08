@@ -13,8 +13,8 @@ const getAllAdminsService = async () => {
 };
 
 // Get single faculty by Id
-const getSingleAdminByIdService = async (facultyId: string) => {
-  const result = await AdminModel.findOne({ id: facultyId }).populate(
+const getSingleAdminByIdService = async (adminId: string) => {
+  const result = await AdminModel.findById(adminId).populate(
     'managementDepartment',
   );
   return result;
@@ -22,9 +22,15 @@ const getSingleAdminByIdService = async (facultyId: string) => {
 
 // Update a faculty info by Id
 const updateAdminByIdService = async (
-  facultyId: string,
+  adminId: string,
   payload: Partial<AdminProps>,
 ) => {
+  // Check is admin exists or not
+  const isAdminExists = await AdminModel.findById(adminId);
+  if (!isAdminExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Admin not found'!);
+  }
+
   const { name, ...remainingData } = payload;
   const modifyUpdatedData: Record<string, unknown> = {
     ...remainingData,
@@ -36,9 +42,9 @@ const updateAdminByIdService = async (
     }
   }
 
-  // update student info
-  const result = await AdminModel.findOneAndUpdate(
-    { id: facultyId },
+  // update admin info
+  const result = await AdminModel.findByIdAndUpdate(
+    adminId,
     modifyUpdatedData,
     { new: true, runValidators: true },
   );
@@ -47,8 +53,9 @@ const updateAdminByIdService = async (
 
 // Delete s faculty info (isDeleted = true) by Id
 const deleteAdminByIdService = async (adminId: string) => {
-  const isStudentExists = await AdminModel.findOne({ id: adminId });
-  if (!isStudentExists) {
+  // Check is admin exists or not
+  const isAdminExists = await AdminModel.findById(adminId);
+  if (!isAdminExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found'!);
   }
 
@@ -56,35 +63,40 @@ const deleteAdminByIdService = async (adminId: string) => {
   try {
     session.startTransaction();
 
-    // update user isDeleted property = true  (transaction-1)
-    const deletedStudent = await AdminModel.findOneAndUpdate(
-      { id: adminId },
+    // update admin isDeleted property = true  (transaction-1)
+    const deletedAdmin = await AdminModel.findByIdAndUpdate(
+      adminId,
       { $set: { isDeleted: true } },
       { new: true, session },
     );
-    if (!deletedStudent) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Fail to delete faculty!');
+    if (!deletedAdmin) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Fail to delete admin!');
     }
 
-    const deletedUser = await UserModel.findOneAndUpdate(
-      { id: adminId },
+    // update user isDeleted property = true  (transaction-1)
+    const userId = deletedAdmin.user;
+    const deletedUser = await UserModel.findByIdAndUpdate(
+      userId,
       { $set: { isDeleted: true } },
       { new: true, session },
     );
     if (!deletedUser) {
-      if (!deletedStudent) {
-        throw new AppError(httpStatus.BAD_REQUEST, 'Fail to delete user!');
+      if (!deletedAdmin) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          'Fail to delete user as admin!',
+        );
       }
     }
     await session.commitTransaction();
     await session.endSession();
-    return deletedStudent;
+    return deletedAdmin;
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'An error occurred while deleting the user as faculty!',
+      'An error occurred while deleting the user as admin!',
     );
   }
 };
