@@ -120,12 +120,12 @@ const createAdminService = async (password: string, payload: AdminProps) => {
   // create a user object
   const userData: Partial<UserProps> = {};
   userData.password = password || (config.default_password as string); // if password is not given, use default password
-  userData.role = 'admin'; // set faculty role
+  userData.role = 'admin'; // set admin role
 
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    // generate a user id (expmple: F-0001) and set as user id
+    // generate a user id (expmple: A-0001) and set as user id
     userData.id = await generateAdminId();
 
     // create a user  (transaction-1)
@@ -138,7 +138,7 @@ const createAdminService = async (password: string, payload: AdminProps) => {
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
 
-    // create a faculty  (transaction-2)
+    // create a new admin  (transaction-2)
     const newAdmin = await AdminModel.create([payload], { session });
     if (!newAdmin.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new admin!');

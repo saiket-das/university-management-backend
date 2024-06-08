@@ -4,16 +4,19 @@ import httpStatus from 'http-status';
 import { AcademicDepartmentModel } from '../academicDepartment/academicDepartment.model';
 import { AdminProps, UserNameProps } from './admin.interface';
 
-const usernameSchema = new Schema<UserNameProps>({
-  firstName: {
-    type: String,
-    required: true,
+const usernameSchema = new Schema<UserNameProps>(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-  },
-});
+  { _id: false },
+);
 
 const adminSchema = new Schema<AdminProps>(
   {
@@ -83,7 +86,7 @@ adminSchema.pre('find', function (next) {
 });
 
 // pre validation before create a faculty (check email unique or not and academic faculty & department exists or not )
-adminSchema.pre('save', async function (next) {
+adminSchema.pre('save', async function (doc, next) {
   const facultyInfo = this;
 
   // check email already exists or not
@@ -107,6 +110,10 @@ adminSchema.pre('save', async function (next) {
       'Academic department does not exists!',
     );
   }
+});
+
+adminSchema.post('save', function (doc, next) {
+  doc.password = '';
   next();
 });
 

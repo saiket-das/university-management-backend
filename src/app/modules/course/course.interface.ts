@@ -11,4 +11,5 @@ export interface CourseProps {
   code: number;
   credits: number;
   preRequisiteCourses: PreRequisiteCoursesProps[];
+  isDeleted: boolean;
 }

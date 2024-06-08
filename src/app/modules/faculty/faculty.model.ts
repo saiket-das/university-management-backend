@@ -7,16 +7,19 @@ import { AcademicDepartmentModel } from '../academicDepartment/academicDepartmen
 import { AcademicFacultyProps } from '../academicFaculty/academicFaculty.interface';
 import { AcademicDepartmentProps } from '../academicDepartment/academicDepartment.interface';
 
-const usernameSchema = new Schema<UserNameProps>({
-  firstName: {
-    type: String,
-    required: true,
+const usernameSchema = new Schema<UserNameProps>(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-  },
-});
+  { _id: false },
+);
 
 const facultySchema = new Schema<FacultyProps>(
   {

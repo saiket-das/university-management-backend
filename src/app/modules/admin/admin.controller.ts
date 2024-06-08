@@ -31,7 +31,6 @@ const getSingleAdminById = catachAsync(async (req, res, next) => {
 const updateAdminById = catachAsync(async (req, res, next) => {
   const { adminId } = req.params;
   const { admin: payload } = req.body;
-  console.log(payload);
   const result = await AdminServices.updateAdminByIdService(adminId, payload);
   sendResponse(res, {
     success: true,

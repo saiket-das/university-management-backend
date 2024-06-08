@@ -5,65 +5,72 @@ import {
   StudentProps,
   UserNameProps,
 } from './student.interface';
-import AppError from '../../errors/AppError';
-import httpStatus from 'http-status';
 
-const usernameSchema = new Schema<UserNameProps>({
-  firstName: {
-    type: String,
-    required: true,
+const usernameSchema = new Schema<UserNameProps>(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-  },
-});
+  { _id: false },
+);
 
-const guardianSchema = new Schema<GuardianProps>({
-  fatherName: {
-    type: String,
-    required: true,
+const guardianSchema = new Schema<GuardianProps>(
+  {
+    fatherName: {
+      type: String,
+      required: true,
+    },
+    fatherOccupation: {
+      type: String,
+      required: true,
+    },
+    fatherContactNo: {
+      type: String,
+      required: true,
+    },
+    motherName: {
+      type: String,
+      required: true,
+    },
+    motherOccupation: {
+      type: String,
+      required: true,
+    },
+    motherContactNo: {
+      type: String,
+      required: true,
+    },
   },
-  fatherOccupation: {
-    type: String,
-    required: true,
-  },
-  fatherContactNo: {
-    type: String,
-    required: true,
-  },
-  motherName: {
-    type: String,
-    required: true,
-  },
-  motherOccupation: {
-    type: String,
-    required: true,
-  },
-  motherContactNo: {
-    type: String,
-    required: true,
-  },
-});
+  { _id: false },
+);
 
-const localGuradianSchema = new Schema<LocalGuardianProps>({
-  name: {
-    type: String,
-    required: true,
+const localGuradianSchema = new Schema<LocalGuardianProps>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    occupation: {
+      type: String,
+      required: true,
+    },
+    contactNo: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
   },
-  occupation: {
-    type: String,
-    required: true,
-  },
-  contactNo: {
-    type: String,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
-  },
-});
+  { _id: false },
+);
 
 const studentSchema = new Schema<StudentProps>(
   {

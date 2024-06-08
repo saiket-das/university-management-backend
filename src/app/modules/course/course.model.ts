@@ -1,16 +1,19 @@
 import { model, Schema, Types } from 'mongoose';
 import { CourseProps, PreRequisiteCoursesProps } from './course.interface';
 
-const preRequisiteCoursesPropsSchema = new Schema<PreRequisiteCoursesProps>({
-  course: {
-    type: Schema.Types.ObjectId,
-    ref: 'Course',
+const preRequisiteCoursesPropsSchema = new Schema<PreRequisiteCoursesProps>(
+  {
+    course: {
+      type: Schema.Types.ObjectId,
+      ref: 'Course',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
-});
+  { _id: false },
+);
 
 const courseSchema = new Schema<CourseProps>({
   title: {
@@ -31,7 +34,10 @@ const courseSchema = new Schema<CourseProps>({
   credits: {
     type: Number,
     required: true,
-    unique: true,
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
   },
   preRequisiteCourses: [preRequisiteCoursesPropsSchema],
 });
