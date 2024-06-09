@@ -43,7 +43,7 @@ const semesterRegistrationSchema = new Schema<SemesterRegistrationProps>(
   },
 );
 
-// pre validation before create a nw semester registration
+// Save pre validation before create a nw semester registration
 semesterRegistrationSchema.pre('save', async function (next) {
   const semesterRegistrationInfo = this;
 
