@@ -1,5 +1,9 @@
 import { model, Schema, Types } from 'mongoose';
-import { CourseProps, PreRequisiteCoursesProps } from './course.interface';
+import {
+  CourseFacultyProps,
+  CourseProps,
+  PreRequisiteCoursesProps,
+} from './course.interface';
 
 const preRequisiteCoursesPropsSchema = new Schema<PreRequisiteCoursesProps>(
   {
@@ -29,6 +33,7 @@ const courseSchema = new Schema<CourseProps>({
   },
   code: {
     type: Number,
+    unique: true,
     required: true,
   },
   credits: {
@@ -43,3 +48,22 @@ const courseSchema = new Schema<CourseProps>({
 });
 
 export const CourseModel = model<CourseProps>('Course', courseSchema);
+
+const courseFacultySchema = new Schema<CourseFacultyProps>({
+  course: {
+    type: Schema.Types.ObjectId,
+    unique: true,
+    ref: 'Course',
+  },
+  faculties: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Faculty ',
+    },
+  ],
+});
+
+export const CourseFacultyModel = model<CourseFacultyProps>(
+  'Course-Faculty',
+  courseFacultySchema,
+);

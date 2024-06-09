@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 import { UserModel } from '../user/user.model';
 import { StudentProps } from './student.interface';
 import QueryBuilder from '../../builder/QueryBuilder';
-import { studentSearchableFields } from './student.constant';
+import { StudentSearchableFields } from './student.constant';
 
 // Get all students
 const getAllStudentsService = async (query: Record<string, unknown>) => {
@@ -20,7 +20,7 @@ const getAllStudentsService = async (query: Record<string, unknown>) => {
       }),
     query,
   )
-    .search(studentSearchableFields)
+    .search(StudentSearchableFields)
     .filter()
     .sort()
     .pagination()

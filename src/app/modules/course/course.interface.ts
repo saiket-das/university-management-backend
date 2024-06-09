@@ -10,6 +10,11 @@ export interface CourseProps {
   prefix: string;
   code: number;
   credits: number;
-  preRequisiteCourses: PreRequisiteCoursesProps[];
-  isDeleted: boolean;
+  preRequisiteCourses?: [PreRequisiteCoursesProps];
+  isDeleted?: boolean;
+}
+
+export interface CourseFacultyProps {
+  course: Types.ObjectId;
+  faculties: [Types.ObjectId];
 }
