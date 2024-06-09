@@ -6,5 +6,5 @@ export interface SemesterRegistrationProps {
   startDate: Date;
   endDate: Date;
   minCredit?: number;
-  maxCredit?: number;
+  maxCredit: number;
 }
