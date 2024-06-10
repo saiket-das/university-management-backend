@@ -1,39 +1,55 @@
 import httpStatus from 'http-status';
-import bcrypt from 'bcrypt';
 import AppError from '../../errors/AppError';
 import { UserModel } from '../user/user.model';
 import { LoginUserProps } from './auth.interface';
+import jwt from 'jsonwebtoken';
+import config from '../../config';
 
 // Login user
 const loginUserService = async (payload: LoginUserProps) => {
+  const user = await UserModel.isUserExists(payload.id);
   // check is user exists or not
-  const isUserExists = await UserModel.findOne({ id: payload.id });
-  if (!isUserExists) {
+  if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
   }
 
   // check is user already deleted or not
-  const isDeleted = isUserExists.isDeleted;
+  const isDeleted = user.isDeleted;
   if (isDeleted) {
     throw new AppError(httpStatus.FORBIDDEN, 'This account is deleted!');
   }
 
   // check is user already deleted or not
-  const isBlocked = isUserExists.status;
+  const isBlocked = user.status;
   if (isBlocked === 'blocked') {
     throw new AppError(httpStatus.FORBIDDEN, 'This account is blocked!');
   }
 
   // check is give password correct or not
   const plainPassword = payload.password;
-  const hashPassword = isUserExists.password;
-  const isPasswordMatched = await bcrypt.compare(plainPassword, hashPassword);
-  if (!isPasswordMatched) {
+  const hashPassword = user.password;
+  if (!(await UserModel.isPasswordMatched(plainPassword, hashPassword))) {
     throw new AppError(httpStatus.FORBIDDEN, 'Wrong password!');
   }
 
   // Access granted: send AccessToken, RefreshToken
-  // return result;
+  // Create JWT Token
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  };
+  const accessToken = jwt.sign(
+    {
+      data: jwtPayload,
+    },
+    config.jwt_access_token as string,
+    { expiresIn: '10d' },
+  );
+
+  return {
+    accessToken,
+    needsPasswordChange: user.needsPasswordChange,
+  };
 };
 
 export const AuthServices = {

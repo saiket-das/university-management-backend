@@ -79,9 +79,6 @@ const studentSchema = new Schema<StudentProps>(
       unique: true,
       required: true,
     },
-    password: {
-      type: String,
-    },
     name: {
       type: usernameSchema,
       required: true,

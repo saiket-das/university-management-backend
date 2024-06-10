@@ -23,7 +23,6 @@ export interface LocalGuardianProps {
 
 export interface StudentProps {
   id: string;
-  password: string;
   name: UserNameProps;
   email: string;
   gender: 'male' | 'female' | 'others';

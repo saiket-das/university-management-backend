@@ -25,9 +25,6 @@ const adminSchema = new Schema<AdminProps>(
       unique: true,
       required: true,
     },
-    password: {
-      type: String,
-    },
     name: {
       type: usernameSchema,
       required: true,
@@ -110,11 +107,6 @@ adminSchema.pre('save', async function (doc, next) {
       'Academic department does not exists!',
     );
   }
-});
-
-adminSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
 });
 
 export const AdminModel = model<AdminProps>('Admin', adminSchema);

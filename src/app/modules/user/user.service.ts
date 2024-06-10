@@ -58,13 +58,10 @@ const createStudentService = async (
     await session.commitTransaction();
     await session.endSession();
     return newStudent[0];
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'An error occurred while creating the new user!',
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, error);
   }
 };
 
@@ -105,13 +102,10 @@ const createFacultyService = async (
     await session.commitTransaction();
     await session.endSession();
     return newFaculty[0];
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'An error occurred while creating the new user as faculty!',
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, error);
   }
 };
 
@@ -134,25 +128,24 @@ const createAdminService = async (password: string, payload: AdminProps) => {
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new user!');
     }
+
     // set id , _id as user into facult
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
 
     // create a new admin  (transaction-2)
     const newAdmin = await AdminModel.create([payload], { session });
+
     if (!newAdmin.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new admin!');
     }
     await session.commitTransaction();
     await session.endSession();
     return newAdmin[0];
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'An error occurred while creating the new user as admin!',
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, error);
   }
 };
 

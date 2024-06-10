@@ -7,7 +7,7 @@ export interface UserNameProps {
 
 export interface AdminProps {
   id: string;
-  password: string;
+
   name: UserNameProps;
   email: string;
   gender: 'male' | 'female' | 'others';
