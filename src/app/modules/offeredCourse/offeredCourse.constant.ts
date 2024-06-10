@@ -9,7 +9,7 @@ export const Days = [
 ];
 
 export const OfferedCourseSearchableFields = [
-  'semesterRegistration.status',
+  'semesterRegistration',
   'academicSemester',
   'academicDepartment',
   'academicFaculty',
