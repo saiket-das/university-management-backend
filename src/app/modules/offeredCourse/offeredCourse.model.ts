@@ -83,25 +83,25 @@ offeredCourseSchema.pre('save', async function (next) {
   } = this;
 
   // check if academic department exists or not
-  const isAcademicDepartment =
+  const isAcademicDepartmentExists =
     await AcademicDepartmentModel.findById(academicDepartment);
-  if (!isAcademicDepartment) {
+  if (!isAcademicDepartmentExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found!');
   }
   // check if academic department exists or not
-  const isAcademicFaculty =
+  const isAcademicFacultyExists =
     await AcademicFacultyModel.findById(academicFaculty);
-  if (!isAcademicFaculty) {
+  if (!isAcademicFacultyExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Academic faculty not found!');
   }
   // check if course exists or not
-  const isCourse = await CourseModel.findById(course);
-  if (!isCourse) {
+  const isCourseExists = await CourseModel.findById(course);
+  if (!isCourseExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Course not found!');
   }
   // check if faculty(Lecturer) exists or not
-  const isFaculty = await FacultyModel.findById(faculty);
-  if (!isFaculty) {
+  const isFacultyExists = await FacultyModel.findById(faculty);
+  if (!isFacultyExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found!');
   }
 
@@ -114,7 +114,7 @@ offeredCourseSchema.pre('save', async function (next) {
   if (!isDepartmentBelongToAcademicFaculty) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `${isAcademicDepartment.name} does not belongs to ${isAcademicFaculty.name}!`,
+      `${isAcademicDepartmentExists.name} does not belongs to ${isAcademicFacultyExists.name}!`,
     );
   }
 

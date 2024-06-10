@@ -16,6 +16,21 @@ const createOfferedCourse = catachAsync(async (req, res, next) => {
   });
 });
 
+// Update a offered course info by Id
+const updateOfferedCourse = catachAsync(async (req, res, next) => {
+  const result = await OfferedCourseServices.updateOfferedCourseService(
+    req.params.id,
+    req.body,
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Update a existing offered course info by id successfully!',
+    data: result,
+  });
+});
+
 export const OfferedCourseControllers = {
   createOfferedCourse,
+  updateOfferedCourse,
 };

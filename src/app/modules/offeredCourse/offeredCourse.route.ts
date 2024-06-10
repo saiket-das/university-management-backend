@@ -17,5 +17,10 @@ router.post(
 // Get a offered course by Id
 
 // Update a offered course info by Id
+router.patch(
+  '/:id',
+  validateRequest(OfferedCourseValidations.updateOfferedCourseValidationSchema),
+  OfferedCourseControllers.updateOfferedCourse,
+);
 
 export const OfferedCourseRoutes = router;
