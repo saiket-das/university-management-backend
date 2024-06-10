@@ -13,6 +13,7 @@ router.post(
 );
 
 // Get all offered courses
+router.get('/', OfferedCourseControllers.getOfferedCourses);
 
 // Get a offered course by Id
 

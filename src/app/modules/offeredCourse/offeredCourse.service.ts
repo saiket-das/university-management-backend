@@ -6,6 +6,8 @@ import { OfferedCourseModel } from './offeredCourse.model';
 import { FacultyModel } from '../faculty/faculty.model';
 import { handleTimeConflict } from './offeredCourse.utils';
 import { RegistrationStatus } from '../semesterResgistration/semesterRegistration.constant';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { OfferedCourseSearchableFields } from './offeredCourse.constant';
 
 // Create a new semester resgistration
 const createOfferedCourseService = async (payload: OfferedCourseProps) => {
@@ -21,6 +23,28 @@ const createOfferedCourseService = async (payload: OfferedCourseProps) => {
   payload.academicSemester = isSemesterExists.academicSemester;
 
   const result = await OfferedCourseModel.create(payload);
+  return result;
+};
+
+// Create a new semester resgistration
+const getOfferedCoursesService = async (query: Record<string, unknown>) => {
+  const offeredCourseQuery = new QueryBuilder(
+    OfferedCourseModel.find()
+      .populate('semesterRegistration')
+      .populate('academicSemester')
+      .populate('academicFaculty')
+      .populate('academicDepartment')
+      .populate('course')
+      .populate('faculty'),
+    query,
+  )
+    .search(OfferedCourseSearchableFields)
+    .filter()
+    .sort()
+    .pagination()
+    .fields();
+
+  const result = await offeredCourseQuery.modelQuery;
   return result;
 };
 
@@ -49,7 +73,6 @@ const updateOfferedCourseService = async (
   const semesterRegistration = isOfferedCourseExists.semesterRegistration;
 
   // check registation semester status is UPCOMING or not before update (if UPCOMING then only can update)
-
   const isRegistrationSemesterStatusUpcoming =
     await SemesterRegistrationModel.findById(semesterRegistration);
   if (
@@ -90,4 +113,5 @@ const updateOfferedCourseService = async (
 export const OfferedCourseServices = {
   createOfferedCourseService,
   updateOfferedCourseService,
+  getOfferedCoursesService,
 };

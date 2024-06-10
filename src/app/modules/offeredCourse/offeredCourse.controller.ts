@@ -16,6 +16,19 @@ const createOfferedCourse = catachAsync(async (req, res, next) => {
   });
 });
 
+// Create a new offered course
+const getOfferedCourses = catachAsync(async (req, res, next) => {
+  const result = await OfferedCourseServices.getOfferedCoursesService(
+    req.query,
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Fetched al offered courses successfully!',
+    data: result,
+  });
+});
+
 // Update a offered course info by Id
 const updateOfferedCourse = catachAsync(async (req, res, next) => {
   const result = await OfferedCourseServices.updateOfferedCourseService(
@@ -33,4 +46,5 @@ const updateOfferedCourse = catachAsync(async (req, res, next) => {
 export const OfferedCourseControllers = {
   createOfferedCourse,
   updateOfferedCourse,
+  getOfferedCourses,
 };
