@@ -10,13 +10,7 @@ import { FacultyModel } from '../faculty/faculty.model';
 
 // Create a new semester resgistration
 const createOfferedCourseService = async (payload: OfferedCourseProps) => {
-  const {
-    semesterRegistration,
-    academicDepartment,
-    academicFaculty,
-    course,
-    faculty,
-  } = payload;
+  const { semesterRegistration } = payload;
 
   // check if semester registration exists or not
   const isSemesterExists =

@@ -21,3 +21,9 @@ export interface OfferedCourseProps {
   startTime: string;
   endTime: string;
 }
+
+export interface ScheduleProps {
+  days: DaysProps[];
+  startTime: string;
+  endTime: String;
+}

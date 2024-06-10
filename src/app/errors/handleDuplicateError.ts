@@ -1,4 +1,3 @@
-import { Error } from 'mongoose';
 import {
   ErrorSourcesProps,
   GenericErrorResponseProps,
