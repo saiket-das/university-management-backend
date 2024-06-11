@@ -34,13 +34,11 @@ const loginUserService = async (payload: LoginUserProps) => {
 
   // Access granted: send AccessToken, RefreshToken
   // Create JWT Token
-  const jwtPayload = {
-    userId: user.id,
-    role: user.role,
-  };
+
   const accessToken = jwt.sign(
     {
-      data: jwtPayload,
+      userId: user.id,
+      role: user.role,
     },
     config.jwt_access_token as string,
     { expiresIn: '10d' },

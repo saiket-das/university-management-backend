@@ -1,10 +1,11 @@
 import { Model } from 'mongoose';
+import { UserRoleProps } from './user.constant';
 
 export interface UserProps {
   id: string;
   password: string;
   needsPasswordChange: boolean;
-  role: 'admin' | 'faculty' | 'student';
+  role: UserRoleProps;
   status: 'in-progress' | 'blocked';
   isDeleted: boolean;
 }

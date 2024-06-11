@@ -5,6 +5,7 @@ import catachAsync from '../../utils/catchAsync';
 
 // Get all students
 const getAllStudents = catachAsync(async (req, res, next) => {
+  console.log(req.user);
   const result = await StudentService.getAllStudentsService(req.query);
   sendResponse(res, {
     success: true,
