@@ -16,6 +16,24 @@ const loginUser = catachAsync(async (req: Request, res: Response) => {
   });
 });
 
+// Login user
+const changePassword = catachAsync(async (req: Request, res: Response) => {
+  const { oldPassword, newPassword } = req.body;
+  const result = await AuthServices.changePasswordService(
+    req.user,
+    oldPassword,
+    newPassword,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Password changed successfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   loginUser,
+  changePassword,
 };

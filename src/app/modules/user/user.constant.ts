@@ -1,5 +1,5 @@
 export const USER_ROLE = {
-  student: 'studnet',
+  student: 'student',
   faculty: 'faculty',
   admin: 'admin',
 } as const;

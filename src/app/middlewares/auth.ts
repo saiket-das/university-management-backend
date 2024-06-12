@@ -6,6 +6,7 @@ import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { UserRoleProps } from '../modules/user/user.constant';
+import { UserModel } from '../modules/user/user.model';
 
 interface CustomRequest extends Request {
   user: JwtPayload;
@@ -23,21 +24,48 @@ const auth = (...requireRoles: UserRoleProps[]) => {
       }
 
       // check is Token valid or not
-      jwt.verify(
+      const decoded = jwt.verify(
         token,
         config.jwt_access_token as string,
-        function (err, decoded) {
-          if (err) {
-            throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized!');
-          }
-          const role = (decoded as JwtPayload).role;
-          if (requireRoles && !requireRoles.includes(role)) {
-            throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized!');
-          }
-          req.user = decoded as JwtPayload;
-          next();
-        },
-      );
+      ) as JwtPayload;
+
+      // check is Role is valid or not
+      const { userId, role, iat } = decoded;
+      if (requireRoles && !requireRoles.includes(role)) {
+        throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized!');
+      }
+
+      const user = await UserModel.isUserExists(userId);
+      // check is user exists or not
+      if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+      }
+
+      // check is user already deleted or not
+      const isDeleted = user.isDeleted;
+      if (isDeleted) {
+        throw new AppError(httpStatus.FORBIDDEN, 'This account is deleted!');
+      }
+
+      // check is user already deleted or not
+      const isBlocked = user.status;
+      if (isBlocked === 'blocked') {
+        throw new AppError(httpStatus.FORBIDDEN, 'This account is blocked!');
+      }
+
+      const passwordChangedAt = user.passwordChangedAt;
+      if (
+        user.passwordChangedAt &&
+        UserModel.isJwtIssuedBeforePasswordChange(
+          iat as number,
+          passwordChangedAt as Date,
+        )
+      ) {
+        throw new AppError(httpStatus.FORBIDDEN, 'Password changed!');
+      }
+
+      req.user = decoded as JwtPayload;
+      next();
     },
   );
 };
