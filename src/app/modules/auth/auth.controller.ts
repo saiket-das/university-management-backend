@@ -23,7 +23,7 @@ const loginUser = catachAsync(async (req: Request, res: Response) => {
   });
 });
 
-// Login user
+// Change password
 const changePassword = catachAsync(async (req: Request, res: Response) => {
   const { oldPassword, newPassword } = req.body;
   const result = await AuthServices.changePasswordService(
@@ -40,7 +40,21 @@ const changePassword = catachAsync(async (req: Request, res: Response) => {
   });
 });
 
+// Refresh token
+const refreshToken = catachAsync(async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+  const result = await AuthServices.refreshTokenService(refreshToken);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Access token is retrieved successfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   loginUser,
   changePassword,
+  refreshToken,
 };

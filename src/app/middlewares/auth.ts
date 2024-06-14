@@ -53,6 +53,7 @@ const auth = (...requireRoles: UserRoleProps[]) => {
         throw new AppError(httpStatus.FORBIDDEN, 'This account is blocked!');
       }
 
+      // check is password changed or not
       const passwordChangedAt = user.passwordChangedAt;
       if (
         user.passwordChangedAt &&

@@ -1,5 +1,4 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import config from '../../config';
+import jwt from 'jsonwebtoken';
 
 export const generateToken = (
   jwtPayload: { userId: string; role: string },
