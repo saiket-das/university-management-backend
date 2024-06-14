@@ -5,6 +5,8 @@ import AppError from '../../errors/AppError';
 import { UserModel } from '../user/user.model';
 import { LoginUserProps } from './auth.interface';
 import config from '../../config';
+import { generateToken } from './auth.utils';
+import { StringExpression } from 'mongoose';
 
 // Login user
 const loginUserService = async (payload: LoginUserProps) => {
@@ -34,19 +36,29 @@ const loginUserService = async (payload: LoginUserProps) => {
   }
 
   // Access granted: send AccessToken, RefreshToken
-  // Create JWT Token
+  // Create access JWT and refresh JWT
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  };
 
-  const accessToken = jwt.sign(
-    {
-      userId: user.id,
-      role: user.role,
-    },
+  // Generate a Access Token
+  const accessToken = generateToken(
+    jwtPayload,
     config.jwt_access_token as string,
-    { expiresIn: '10d' },
+    config.jwt_access_token_expires_in as string,
+  );
+
+  // Generate a Refresh Token
+  const refreshToken = generateToken(
+    jwtPayload,
+    config.jwt_refresh_token as string,
+    config.jwt_refresh_token_expires_in as string,
   );
 
   return {
     accessToken,
+    refreshToken,
     needsPasswordChange: user.needsPasswordChange,
   };
 };

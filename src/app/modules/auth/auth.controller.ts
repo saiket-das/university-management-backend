@@ -3,16 +3,23 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catachAsync from '../../utils/catchAsync';
 import { AuthServices } from './auth.service';
+import config from '../../config';
 
 // Login user
 const loginUser = catachAsync(async (req: Request, res: Response) => {
-  const result = await AuthServices.loginUserService(req.body);
+  const { refreshToken, accessToken, needsPasswordChange } =
+    await AuthServices.loginUserService(req.body);
+
+  res.cookie('refreshToken', refreshToken, {
+    secure: config.NODE_ENV === 'production',
+    httpOnly: true,
+  });
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'User login successfully!',
-    data: result,
+    data: { accessToken, needsPasswordChange },
   });
 });
 
