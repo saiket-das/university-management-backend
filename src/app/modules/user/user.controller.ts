@@ -42,8 +42,23 @@ const createAdmin = catachAsync(async (req, res, next) => {
   });
 });
 
+// Get me
+const getMe = catachAsync(async (req, res) => {
+  const token = req.headers.authorization as string;
+  const user = req.user;
+  const result = await UserServices.getMeService(user);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Get me successfully!',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createStudent,
   createFaculty,
   createAdmin,
+  getMe,
 };

@@ -4,6 +4,7 @@ import httpStatus from 'http-status';
 import catachAsync from '../../utils/catchAsync';
 import { AuthServices } from './auth.service';
 import config from '../../config';
+import AppError from '../../errors/AppError';
 
 // Login user
 const loginUser = catachAsync(async (req: Request, res: Response) => {

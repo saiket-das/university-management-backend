@@ -17,6 +17,9 @@ import { FacultyModel } from '../faculty/faculty.model';
 import { FacultyProps } from '../faculty/faculty.interface';
 import { AdminProps } from '../admin/admin.interface';
 import { AdminModel } from '../admin/admin.model';
+import { verifyToken } from '../auth/auth.utils';
+import { USER_ROLE } from './user.constant';
+import { JwtPayload } from 'jsonwebtoken';
 
 // Create a new student
 const createStudentService = async (
@@ -152,8 +155,23 @@ const createAdminService = async (password: string, payload: AdminProps) => {
   }
 };
 
+// Get me
+const getMeService = async (user: JwtPayload) => {
+  const { userId, role } = user;
+  let result;
+  if (role === USER_ROLE.admin) {
+    result = await AdminModel.findOne({ id: userId });
+  } else if (role === USER_ROLE.faculty) {
+    result = await FacultyModel.findOne({ id: userId });
+  } else if (role === USER_ROLE.student) {
+    result = await StudentModel.findOne({ id: userId });
+  }
+  return result;
+};
+
 export const UserServices = {
   createStudentService,
   createFacultyService,
   createAdminService,
+  getMeService,
 };

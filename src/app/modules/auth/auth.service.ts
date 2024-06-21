@@ -6,7 +6,6 @@ import { UserModel } from '../user/user.model';
 import { LoginUserProps } from './auth.interface';
 import config from '../../config';
 import { generateToken } from './auth.utils';
-import { StringExpression } from 'mongoose';
 import { sendEmail } from '../../utils/sendEmail';
 
 // Login user
