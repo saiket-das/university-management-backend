@@ -7,6 +7,7 @@ import { LoginUserProps } from './auth.interface';
 import config from '../../config';
 import { generateToken } from './auth.utils';
 import { StringExpression } from 'mongoose';
+import { sendEmail } from '../../utils/sendEmail';
 
 // Login user
 const loginUserService = async (payload: LoginUserProps) => {
@@ -164,8 +165,99 @@ const refreshTokenService = async (refreshToken: string) => {
   };
 };
 
+// Forget password
+const forgetPasswordService = async (userId: string) => {
+  // check is user exists or not
+  const user = await UserModel.isUserExists(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+  }
+
+  // check is user already deleted or not
+  const isDeleted = user.isDeleted;
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This account is deleted!');
+  }
+
+  // check is user already deleted or not
+  const isBlocked = user.status;
+  if (isBlocked === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This account is blocked!');
+  }
+
+  // Generate a Access Token
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  };
+  const resetToken = generateToken(
+    jwtPayload,
+    config.jwt_access_token as string,
+    '10m',
+  );
+
+  const resetLink = `${config.reset_password_ui_link}?id=${user.id}&toekn=${resetToken}`;
+  sendEmail(user.email, resetLink);
+
+  return null;
+};
+
+// Reset password
+const resetPasswordService = async (
+  payload: { id: string; newPassword: string },
+  token: string,
+) => {
+  // check is Token valid or not
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_token as string,
+  ) as JwtPayload;
+
+  const { userId, role } = decoded;
+
+  if (userId != payload.id) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User id is not same!');
+  }
+
+  // check is user exists or not
+  const user = await UserModel.isUserExists(payload.id);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+  }
+
+  // check is user already deleted or not
+  const isDeleted = user.isDeleted;
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This account is deleted!');
+  }
+
+  // check is user already deleted or not
+  const isBlocked = user.status;
+  if (isBlocked === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This account is blocked!');
+  }
+
+  // bcrypt new password
+  const hashNewPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  await UserModel.findOneAndUpdate(
+    { id: userId, role: role },
+    {
+      password: hashNewPassword,
+      needsPasswordChange: false,
+      passwordChangedAt: new Date(),
+    },
+    { new: true, runValidators: true },
+  );
+};
+
 export const AuthServices = {
   loginUserService,
   changePasswordService,
   refreshTokenService,
+  forgetPasswordService,
+  resetPasswordService,
 };

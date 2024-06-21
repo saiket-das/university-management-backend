@@ -27,6 +27,7 @@ const createStudentService = async (
   const userData: Partial<UserProps> = {};
   userData.password = password || (config.default_password as string); // if password is not given, use default password
   userData.role = 'student'; // set student role
+  userData.email = payload.email;
 
   const admissionSemester = await AcademicSemesterModel.findById(
     payload.admissionSemester,
@@ -74,6 +75,7 @@ const createFacultyService = async (
   const userData: Partial<UserProps> = {};
   userData.password = password || (config.default_password as string); // if password is not given, use default password
   userData.role = 'faculty'; // set faculty role
+  userData.email = payload.email;
 
   const session = await mongoose.startSession();
   try {
@@ -115,6 +117,7 @@ const createAdminService = async (password: string, payload: AdminProps) => {
   const userData: Partial<UserProps> = {};
   userData.password = password || (config.default_password as string); // if password is not given, use default password
   userData.role = 'admin'; // set admin role
+  userData.email = payload.email;
 
   const session = await mongoose.startSession();
   try {

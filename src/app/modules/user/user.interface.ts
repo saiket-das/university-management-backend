@@ -3,6 +3,7 @@ import { UserRoleProps } from './user.constant';
 
 export interface UserProps {
   id: string;
+  email: string;
   password: string;
   needsPasswordChange: boolean;
   passwordChangedAt?: Date;
