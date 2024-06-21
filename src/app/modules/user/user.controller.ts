@@ -56,9 +56,24 @@ const getMe = catachAsync(async (req, res) => {
   });
 });
 
+// Change status
+const changeStatus = catachAsync(async (req, res) => {
+  const id = req.params.id;
+  const { status } = req.body;
+  const result = await UserServices.changeStatusService(id, status);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User status is updated successfully!',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createStudent,
   createFaculty,
   createAdmin,
   getMe,
+  changeStatus,
 };

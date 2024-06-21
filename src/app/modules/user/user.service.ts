@@ -169,9 +169,22 @@ const getMeService = async (user: JwtPayload) => {
   return result;
 };
 
+// Change status
+const changeStatusService = async (userId: string, status: string) => {
+  const result = await UserModel.findByIdAndUpdate(
+    userId,
+    { status: status },
+    {
+      new: true,
+    },
+  );
+  return result;
+};
+
 export const UserServices = {
   createStudentService,
   createFacultyService,
   createAdminService,
   getMeService,
+  changeStatusService,
 };
