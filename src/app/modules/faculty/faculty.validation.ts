@@ -29,9 +29,6 @@ const createFacultyValidationSchema = z.object({
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
       academicFaculty: z.string(),
       academicDepartment: z.string(),
-      profileImage: z
-        .string()
-        .url({ message: 'Profile image must be a valid URL' }),
       isDeleted: z.boolean().optional(),
     }),
   }),

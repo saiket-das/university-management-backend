@@ -53,6 +53,7 @@ const updateUsernameValidationSchema = z.object({
 
 const updateAdminValidationSchema = z.object({
   body: z.object({
+    password: z.string().optional(),
     admin: z.object({
       name: updateUsernameValidationSchema.optional(),
       email: z
@@ -73,10 +74,6 @@ const updateAdminValidationSchema = z.object({
       permanentAddress: z.string().optional(),
       bloodGroup: z
         .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
-        .optional(),
-      profileImage: z
-        .string()
-        .url({ message: 'Profile image must be a valid URL' })
         .optional(),
       managementDepartment: z.string().optional(),
       isDeleted: z.boolean().optional(),

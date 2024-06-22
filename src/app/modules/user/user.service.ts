@@ -17,12 +17,13 @@ import { FacultyModel } from '../faculty/faculty.model';
 import { FacultyProps } from '../faculty/faculty.interface';
 import { AdminProps } from '../admin/admin.interface';
 import { AdminModel } from '../admin/admin.model';
-import { verifyToken } from '../auth/auth.utils';
 import { USER_ROLE } from './user.constant';
 import { JwtPayload } from 'jsonwebtoken';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 // Create a new student
 const createStudentService = async (
+  file: any,
   password: string,
   payload: StudentProps,
 ) => {
@@ -50,9 +51,16 @@ const createStudentService = async (
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create new user!');
     }
-    // set id , _id as user
+
+    // send image to cloudinary
+    const path = file?.path;
+    const imageName = `${userData.id}-${payload.name.firstName}`;
+    const { secure_url } = await sendImageToCloudinary(path, imageName);
+
+    // set id , _id as user into student, proile image
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImage = secure_url;
 
     // create a student  (transaction-2)
     const newStudent = await StudentModel.create([payload], { session });
@@ -71,6 +79,7 @@ const createStudentService = async (
 
 // Create a new faculty
 const createFacultyService = async (
+  file: any,
   password: string,
   payload: FacultyProps,
 ) => {
@@ -92,9 +101,16 @@ const createFacultyService = async (
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new user!');
     }
-    // set id , _id as user into facult
+
+    // send image to cloudinary
+    const path = file?.path;
+    const imageName = `${userData.id}-${payload.name.firstName}`;
+    const { secure_url } = await sendImageToCloudinary(path, imageName);
+
+    // set id , _id as user into faculty,
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImage = secure_url;
 
     // create a faculty  (transaction-2)
     const newFaculty = await FacultyModel.create([payload], { session });
@@ -115,7 +131,11 @@ const createFacultyService = async (
 };
 
 // Create a new faculty
-const createAdminService = async (password: string, payload: AdminProps) => {
+const createAdminService = async (
+  file: any,
+  password: string,
+  payload: AdminProps,
+) => {
   // create a user object
   const userData: Partial<UserProps> = {};
   userData.password = password || (config.default_password as string); // if password is not given, use default password
@@ -135,9 +155,15 @@ const createAdminService = async (password: string, payload: AdminProps) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'Fail to create a new user!');
     }
 
-    // set id , _id as user into facult
+    // send image to cloudinary
+    const path = file?.path;
+    const imageName = `${userData.id}-${payload.name.firstName}`;
+    const { secure_url } = await sendImageToCloudinary(path, imageName);
+
+    // set id , _id as user into admin, proile image
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImage = secure_url;
 
     // create a new admin  (transaction-2)
     const newAdmin = await AdminModel.create([payload], { session });

@@ -7,13 +7,13 @@ export const sendEmail = async (userEmail: string, resetUrl: string) => {
     port: 587,
     secure: config.NODE_ENV === 'prodction', // Use `true` for port 465, `false` for all other ports
     auth: {
-      user: 'isaiketdas@gmail.com',
-      pass: 'htkp hprh bgkl clrh',
+      user: config.nodemailer_email,
+      pass: config.nodemailer_pass,
     },
   });
 
   const info = await transporter.sendMail({
-    from: 'isaiketdas@gmail.com', // sender address
+    from: config.nodemailer_email, // sender address
     to: userEmail, // list of receivers
     subject: 'Password reset request', // Subject line
     html: `

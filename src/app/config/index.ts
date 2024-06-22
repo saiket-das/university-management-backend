@@ -14,4 +14,9 @@ export default {
   jwt_refresh_token: process.env.JWT_REFRESH_SECRET,
   jwt_refresh_token_expires_in: process.env.JWT_REFREESH_TOKEN_EXPRIRES_IN,
   reset_password_ui_link: process.env.RESET_PASSWORD_UI_LINK,
+  nodemailer_email: process.env.NODEMAILER_EMAIL,
+  nodemailer_pass: process.env.NODEMAILER_PASS,
+  cloudinary_name: process.env.CLOUDINARY_NAME,
+  cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
+  cloudinary_api_secret: process.env.CLOUDINARY_SECRET,
 };

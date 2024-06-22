@@ -68,6 +68,7 @@ const createLocalGuardianValidationSchema = z.object({
 
 const createStudentValidationSchema = z.object({
   body: z.object({
+    password: z.string().optional(),
     student: z.object({
       name: createUsernameValidationSchema,
       email: z
@@ -84,9 +85,6 @@ const createStudentValidationSchema = z.object({
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
       admissionSemester: z.string(),
       academicDepartment: z.string(),
-      profileImage: z
-        .string()
-        .url({ message: 'Profile image must be a valid URL' }),
       isDeleted: z.boolean().optional(),
     }),
   }),

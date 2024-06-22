@@ -6,7 +6,11 @@ import catachAsync from '../../utils/catchAsync';
 // Create a new student
 const createStudent = catachAsync(async (req, res, next) => {
   const { password, student: payload } = req.body;
-  const result = await UserServices.createStudentService(password, payload);
+  const result = await UserServices.createStudentService(
+    req.file,
+    password,
+    payload,
+  );
 
   sendResponse(res, {
     success: true,
@@ -19,7 +23,12 @@ const createStudent = catachAsync(async (req, res, next) => {
 // Create a new faculty
 const createFaculty = catachAsync(async (req, res, next) => {
   const { password, faculty: payload } = req.body;
-  const result = await UserServices.createFacultyService(password, payload);
+
+  const result = await UserServices.createFacultyService(
+    req.file,
+    password,
+    payload,
+  );
 
   sendResponse(res, {
     success: true,
@@ -32,7 +41,11 @@ const createFaculty = catachAsync(async (req, res, next) => {
 // Create a new admin
 const createAdmin = catachAsync(async (req, res, next) => {
   const { password, admin: payload } = req.body;
-  const result = await UserServices.createAdminService(password, payload);
+  const result = await UserServices.createAdminService(
+    req.file,
+    password,
+    payload,
+  );
 
   sendResponse(res, {
     success: true,
