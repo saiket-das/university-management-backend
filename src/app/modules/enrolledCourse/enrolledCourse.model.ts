@@ -103,7 +103,7 @@ const enrolledCourseSchema = new Schema<EnrolledCourseProps>({
   },
 });
 
-export const EnrolledCourse = mongoose.model<EnrolledCourseProps>(
+export const EnrolledCourseModel = mongoose.model<EnrolledCourseProps>(
   'Enrolled-Course',
   enrolledCourseSchema,
 );
