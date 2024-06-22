@@ -18,17 +18,33 @@ router.post(
 );
 
 // Fetch all academic semesters
-router.get('/', AcademicSemesterControllers.fetchAllAcademicSemester);
+router.get(
+  '/',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  AcademicSemesterControllers.fetchAllAcademicSemester,
+);
 
 // Fetch single academic semester by Id
 router.get(
   '/:semesterId',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
   AcademicSemesterControllers.fetchSingleAcademicSemesterById,
 );
 
 // Update single academic semester's info by Id
 router.patch(
   '/:semesterId',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     AcademicSemesterValidations.updateAcademicSemesterValidationSchema,
   ),

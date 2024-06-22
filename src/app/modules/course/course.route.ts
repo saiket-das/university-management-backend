@@ -10,7 +10,7 @@ const router = Router();
 // Create a new course
 router.post(
   '/',
-  auth('admin'),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(CourseValidations.createCourseValidationSchema),
   CourseControllers.createCourse,
 );
@@ -18,32 +18,46 @@ router.post(
 // Get all courses
 router.get(
   '/',
-  auth('admin', 'faculty', 'student'),
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
   CourseControllers.getAllCourses,
 );
 
 // Get a course by Id
 router.get(
   '/:courseId',
-  auth('admin', 'faculty', 'student'),
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
   CourseControllers.getSingleCourseById,
 );
 
 // Update a course info by Id
 router.patch(
   '/:courseId',
-  auth('admin'),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(CourseValidations.updateCourseValidationSchema),
   CourseControllers.updateCourseById,
 );
 
 // Delete a course by Id
-router.delete('/:courseId', auth('admin'), CourseControllers.deleteCourseById);
+router.delete(
+  '/:courseId',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  CourseControllers.deleteCourseById,
+);
 
 // Assign course to faculties
 router.put(
   '/:courseId/assign-course-to-faculties',
-  auth('admin'),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(CourseValidations.courseFacultyValidationSchema),
   CourseControllers.assignCourseToFaculties,
 );
@@ -51,7 +65,7 @@ router.put(
 // Delete faculties from course
 router.delete(
   '/:courseId/remove-faculties-from-course',
-  auth('admin'),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(CourseValidations.courseFacultyValidationSchema),
   CourseControllers.removeFacultiesFromCourse,
 );

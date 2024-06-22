@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import httpStatus from 'http-status';
 import config from '../../config';
 import { AcademicSemesterProps } from '../academicSemester/academicSemester.interface';
@@ -12,7 +13,6 @@ import {
   generateStudentId,
 } from './user.utils';
 import AppError from '../../errors/AppError';
-import mongoose from 'mongoose';
 import { FacultyModel } from '../faculty/faculty.model';
 import { FacultyProps } from '../faculty/faculty.interface';
 import { AdminProps } from '../admin/admin.interface';
@@ -43,12 +43,17 @@ const createStudentService = async (
   }
 
   // check is academic department exists or not
-  const isAcademicDepartmentExists = await AcademicDepartmentModel.findById(
+  const academicDepartment = await AcademicDepartmentModel.findById(
     payload.academicDepartment,
   );
-  if (!isAcademicDepartmentExists) {
+  if (!academicDepartment) {
     throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found');
   }
+  // convert string to ObjectId
+  const academicFacultyObjectId = new mongoose.Types.ObjectId(
+    academicDepartment?.academicFaculty,
+  );
+  payload.academicFaculty = academicFacultyObjectId;
 
   const session = await mongoose.startSession();
   try {
@@ -76,7 +81,6 @@ const createStudentService = async (
     // set id , _id as user into student, proile image
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    payload.academicFaculty = isAcademicDepartmentExists._id;
 
     // create a student  (transaction-2)
     const newStudent = await StudentModel.create([payload], { session });
@@ -104,6 +108,19 @@ const createFacultyService = async (
   userData.password = password || (config.default_password as string); // if password is not given, use default password
   userData.role = 'faculty'; // set faculty role
   userData.email = payload.email;
+
+  // check is academic department exists or not
+  const academicDepartment = await AcademicDepartmentModel.findById(
+    payload.academicDepartment,
+  );
+  if (!academicDepartment) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found');
+  }
+  // convert string to ObjectId
+  const academicFacultyObjectId = new mongoose.Types.ObjectId(
+    academicDepartment?.academicFaculty,
+  );
+  payload.academicFaculty = academicFacultyObjectId;
 
   const session = await mongoose.startSession();
   try {

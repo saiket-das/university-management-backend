@@ -67,7 +67,6 @@ const facultySchema = new Schema<FacultyProps>(
     },
     academicFaculty: {
       type: Schema.Types.ObjectId,
-      required: [true, 'Academic faculty is reuqired'],
       ref: 'Academic-Faculty',
     },
     academicDepartment: {
