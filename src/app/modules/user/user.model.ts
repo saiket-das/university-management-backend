@@ -30,7 +30,7 @@ const userSchema = new Schema<UserProps, StaticUserModel>(
     },
     role: {
       type: String,
-      enum: ['admin', 'faculty', 'student'],
+      enum: ['super-admin', 'admin', 'faculty', 'student'],
     },
     status: {
       type: String,

@@ -29,7 +29,11 @@ const getAllCoursesService = async (query: Record<string, unknown>) => {
     .filter()
     .pagination();
   const result = await courseQuery.modelQuery;
-  return result;
+  const meta = await courseQuery.countTotal();
+  return {
+    meta,
+    result,
+  };
 };
 
 // Get a course by Id
