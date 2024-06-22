@@ -42,7 +42,7 @@ academicDepartmentSchema.pre('save', async function (next) {
     academicDepartment.academicFaculty,
   );
   if (!isAcademicFacultyExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found!');
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic faculty not found!');
   }
   next();
 });

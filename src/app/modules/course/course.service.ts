@@ -47,6 +47,14 @@ const getSingleCourseByIdService = async (courseId: string) => {
   return result;
 };
 
+// Get assigned faculties with course
+const getFacultiesWithCourseService = async (courseId: string) => {
+  const result = await CourseFacultyModel.findOne({
+    course: courseId,
+  }).populate('faculties');
+  return result;
+};
+
 // Update a course info by Id
 const updateCourseByIdService = async (
   courseId: string,
@@ -202,6 +210,7 @@ export const CourseServices = {
   createCourseService,
   getAllCoursesService,
   getSingleCourseByIdService,
+  getFacultiesWithCourseService,
   updateCourseByIdService,
   deleteCourseByIdService,
   assignCourseToFacultiesService,
