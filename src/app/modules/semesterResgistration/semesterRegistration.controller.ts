@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import { SemesterRegistrationServices } from './semesterRegistration.service';
 
 // Create a new semester resgistration
-const createSemesterRegistration = catachAsync(async (req, res, next) => {
+const createSemesterRegistration = catchAsync(async (req, res, next) => {
   const result =
     await SemesterRegistrationServices.createSemesterRegistrationService(
       req.body,
@@ -18,7 +18,7 @@ const createSemesterRegistration = catachAsync(async (req, res, next) => {
 });
 
 // Get all semester registrations
-const getAllSemesterRegistrations = catachAsync(async (req, res, next) => {
+const getAllSemesterRegistrations = catchAsync(async (req, res, next) => {
   const result =
     await SemesterRegistrationServices.getAllSemesterRegistrationsService(
       req.query,
@@ -32,7 +32,7 @@ const getAllSemesterRegistrations = catachAsync(async (req, res, next) => {
 });
 
 // Get a semester registration by Id
-const getSingleSemesterRegistration = catachAsync(async (req, res, next) => {
+const getSingleSemesterRegistration = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const result =
     await SemesterRegistrationServices.getSingleSemesterRegistrationService(id);
@@ -45,7 +45,7 @@ const getSingleSemesterRegistration = catachAsync(async (req, res, next) => {
 });
 
 // Update a semester registration info by Id
-const updateSemesterRegistration = catachAsync(async (req, res, next) => {
+const updateSemesterRegistration = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const result =
     await SemesterRegistrationServices.updateSemesterRegistrationService(

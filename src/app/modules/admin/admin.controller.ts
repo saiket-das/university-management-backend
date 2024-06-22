@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import { AdminServices } from './admin.service';
 
 // Get all admins
-const getAllAdmins = catachAsync(async (req, res, next) => {
+const getAllAdmins = catchAsync(async (req, res, next) => {
   const result = await AdminServices.getAllAdminsService();
   sendResponse(res, {
     success: true,
@@ -15,7 +15,7 @@ const getAllAdmins = catachAsync(async (req, res, next) => {
 });
 
 // Get single faculty by Id
-const getSingleAdminById = catachAsync(async (req, res, next) => {
+const getSingleAdminById = catchAsync(async (req, res, next) => {
   const { adminId } = req.params;
   const result = await AdminServices.getSingleAdminByIdService(adminId);
 
@@ -28,7 +28,7 @@ const getSingleAdminById = catachAsync(async (req, res, next) => {
 });
 
 // Update a admin info by Id
-const updateAdminById = catachAsync(async (req, res, next) => {
+const updateAdminById = catchAsync(async (req, res, next) => {
   const { adminId } = req.params;
   const { admin: payload } = req.body;
   const result = await AdminServices.updateAdminByIdService(adminId, payload);
@@ -41,7 +41,7 @@ const updateAdminById = catachAsync(async (req, res, next) => {
 });
 
 // Delete s admin info (isDeleted = true) by Id
-const deleteAdminById = catachAsync(async (req, res, next) => {
+const deleteAdminById = catchAsync(async (req, res, next) => {
   const { adminId } = req.params;
   const result = await AdminServices.deleteAdminByIdService(adminId);
   sendResponse(res, {

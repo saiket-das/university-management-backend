@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { AcademicSemesterServices } from './academicSemester.service';
 
 // Create a new academic semester
-const createAcademicSemester = catachAsync(async (req, res, next) => {
+const createAcademicSemester = catchAsync(async (req, res, next) => {
   const result = await AcademicSemesterServices.createAcademicSemesterService(
     req.body,
   );
@@ -18,7 +18,7 @@ const createAcademicSemester = catachAsync(async (req, res, next) => {
 });
 
 // Get all academic semesters
-const fetchAllAcademicSemester = catachAsync(async (req, res, next) => {
+const fetchAllAcademicSemester = catchAsync(async (req, res, next) => {
   const result =
     await AcademicSemesterServices.fetchAllAcademicSemesterService();
   sendResponse(res, {
@@ -30,7 +30,7 @@ const fetchAllAcademicSemester = catachAsync(async (req, res, next) => {
 });
 
 // Get a single academic semester by id
-const fetchSingleAcademicSemesterById = catachAsync(async (req, res, next) => {
+const fetchSingleAcademicSemesterById = catchAsync(async (req, res, next) => {
   const result =
     await AcademicSemesterServices.fetchSingleAcademicSemesterByIdService(
       req.params.semesterId,
@@ -45,7 +45,7 @@ const fetchSingleAcademicSemesterById = catachAsync(async (req, res, next) => {
 });
 
 // Update a academic semester's info
-const updateAcademicSemesterById = catachAsync(async (req, res, next) => {
+const updateAcademicSemesterById = catchAsync(async (req, res, next) => {
   const result =
     await AcademicSemesterServices.updateAcademicSemesterByIdService(
       req.params.semesterId,

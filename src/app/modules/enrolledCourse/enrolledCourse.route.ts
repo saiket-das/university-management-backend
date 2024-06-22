@@ -17,7 +17,14 @@ router.post(
   EnrolledCourseControllers.createEnrolledCourse,
 );
 
-// Create an enrolled course's info
+// Get all courses of a specific student
+router.get(
+  '/my-enrolled-courses',
+  auth(USER_ROLE.student),
+  EnrolledCourseControllers.getMyEnrolledCourses,
+);
+
+// Update student's enrolled course's mark info
 router.patch(
   '/update-enrolled-course-marks',
   auth(USER_ROLE.faculty),

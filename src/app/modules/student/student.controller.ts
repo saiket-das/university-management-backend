@@ -1,10 +1,10 @@
 import { StudentService } from './student.service';
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 
 // Get all students
-const getAllStudents = catachAsync(async (req, res, next) => {
+const getAllStudents = catchAsync(async (req, res, next) => {
   console.log(req.user);
   const result = await StudentService.getAllStudentsService(req.query);
   sendResponse(res, {
@@ -16,7 +16,7 @@ const getAllStudents = catachAsync(async (req, res, next) => {
 });
 
 // Get single student by Id
-const getSingleStudentbyId = catachAsync(async (req, res, next) => {
+const getSingleStudentbyId = catchAsync(async (req, res, next) => {
   const { studentId } = req.params;
   const result = await StudentService.getSingleStudentByIdService(studentId);
 
@@ -29,7 +29,7 @@ const getSingleStudentbyId = catachAsync(async (req, res, next) => {
 });
 
 // Update a student info by Id
-const updateStudentById = catachAsync(async (req, res, next) => {
+const updateStudentById = catchAsync(async (req, res, next) => {
   const { studentId } = req.params;
   const { student: payload } = req.body;
   const result = await StudentService.updateStudentByIdService(
@@ -45,7 +45,7 @@ const updateStudentById = catachAsync(async (req, res, next) => {
 });
 
 // Delete s student info (isDeleted = true) by Id
-const deleteStudentById = catachAsync(async (req, res, next) => {
+const deleteStudentById = catchAsync(async (req, res, next) => {
   const { studentId } = req.params;
   const result = await StudentService.deleteStudentByIdService(studentId);
   sendResponse(res, {

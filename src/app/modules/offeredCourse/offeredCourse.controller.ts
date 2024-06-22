@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { OfferedCourseServices } from './offeredCourse.service';
 
 // Create a new offered course
-const createOfferedCourse = catachAsync(async (req, res, next) => {
+const createOfferedCourse = catchAsync(async (req, res, next) => {
   const result = await OfferedCourseServices.createOfferedCourseService(
     req.body,
   );
@@ -17,7 +17,7 @@ const createOfferedCourse = catachAsync(async (req, res, next) => {
 });
 
 // Create a new offered course
-const getOfferedCourses = catachAsync(async (req, res, next) => {
+const getOfferedCourses = catchAsync(async (req, res, next) => {
   const result = await OfferedCourseServices.getOfferedCoursesService(
     req.query,
   );
@@ -30,7 +30,7 @@ const getOfferedCourses = catachAsync(async (req, res, next) => {
 });
 
 // Update a offered course info by Id
-const updateOfferedCourse = catachAsync(async (req, res, next) => {
+const updateOfferedCourse = catchAsync(async (req, res, next) => {
   const result = await OfferedCourseServices.updateOfferedCourseService(
     req.params.id,
     req.body,

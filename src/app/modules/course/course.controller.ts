@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { CourseServices } from './course.service';
 
 // Create a new course
-const createCourse = catachAsync(async (req, res, next) => {
+const createCourse = catchAsync(async (req, res, next) => {
   const { course: payload } = req.body;
   const result = await CourseServices.createCourseService(payload);
   sendResponse(res, {
@@ -16,7 +16,7 @@ const createCourse = catachAsync(async (req, res, next) => {
 });
 
 // Get all courses
-const getAllCourses = catachAsync(async (req, res, next) => {
+const getAllCourses = catchAsync(async (req, res, next) => {
   const result = await CourseServices.getAllCoursesService(req.query);
   sendResponse(res, {
     success: true,
@@ -27,7 +27,7 @@ const getAllCourses = catachAsync(async (req, res, next) => {
 });
 
 // Get a course by Id
-const getSingleCourseById = catachAsync(async (req, res, next) => {
+const getSingleCourseById = catchAsync(async (req, res, next) => {
   const { courseId } = req.params;
   const result = await CourseServices.getSingleCourseByIdService(courseId);
   sendResponse(res, {
@@ -39,7 +39,7 @@ const getSingleCourseById = catachAsync(async (req, res, next) => {
 });
 
 // Update a course info by Id
-const updateCourseById = catachAsync(async (req, res, next) => {
+const updateCourseById = catchAsync(async (req, res, next) => {
   const { courseId } = req.params;
   const { course: payload } = req.body;
   const result = await CourseServices.updateCourseByIdService(
@@ -55,7 +55,7 @@ const updateCourseById = catachAsync(async (req, res, next) => {
 });
 
 // Delete a course by Id
-const deleteCourseById = catachAsync(async (req, res, next) => {
+const deleteCourseById = catchAsync(async (req, res, next) => {
   const { courseId } = req.params;
   const result = await CourseServices.deleteCourseByIdService(courseId);
   sendResponse(res, {
@@ -67,7 +67,7 @@ const deleteCourseById = catachAsync(async (req, res, next) => {
 });
 
 // Assign course to faculties
-const assignCourseToFaculties = catachAsync(async (req, res, next) => {
+const assignCourseToFaculties = catchAsync(async (req, res, next) => {
   const { courseId } = req.params;
   const payload = req.body;
   const result = await CourseServices.assignCourseToFacultiesService(
@@ -83,7 +83,7 @@ const assignCourseToFaculties = catachAsync(async (req, res, next) => {
 });
 
 // Delete faculties from course
-const removeFacultiesFromCourse = catachAsync(async (req, res, next) => {
+const removeFacultiesFromCourse = catchAsync(async (req, res, next) => {
   const { courseId } = req.params;
   const payload = req.body;
   const result = await CourseServices.removeFacultiesFromCourseService(

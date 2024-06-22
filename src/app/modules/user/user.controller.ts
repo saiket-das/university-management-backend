@@ -1,10 +1,10 @@
 import { UserServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 
 // Create a new student
-const createStudent = catachAsync(async (req, res, next) => {
+const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: payload } = req.body;
   const result = await UserServices.createStudentService(
     req.file,
@@ -21,7 +21,7 @@ const createStudent = catachAsync(async (req, res, next) => {
 });
 
 // Create a new faculty
-const createFaculty = catachAsync(async (req, res, next) => {
+const createFaculty = catchAsync(async (req, res, next) => {
   const { password, faculty: payload } = req.body;
 
   const result = await UserServices.createFacultyService(
@@ -39,7 +39,7 @@ const createFaculty = catachAsync(async (req, res, next) => {
 });
 
 // Create a new admin
-const createAdmin = catachAsync(async (req, res, next) => {
+const createAdmin = catchAsync(async (req, res, next) => {
   const { password, admin: payload } = req.body;
   const result = await UserServices.createAdminService(
     req.file,
@@ -56,7 +56,7 @@ const createAdmin = catachAsync(async (req, res, next) => {
 });
 
 // Get me
-const getMe = catachAsync(async (req, res) => {
+const getMe = catchAsync(async (req, res) => {
   const token = req.headers.authorization as string;
   const user = req.user;
   const result = await UserServices.getMeService(user);
@@ -70,7 +70,7 @@ const getMe = catachAsync(async (req, res) => {
 });
 
 // Change status
-const changeStatus = catachAsync(async (req, res) => {
+const changeStatus = catchAsync(async (req, res) => {
   const id = req.params.id;
   const { status } = req.body;
   const result = await UserServices.changeStatusService(id, status);

@@ -7,6 +7,9 @@ import { EnrolledCourseModel } from './enrolledCourse.model';
 import { CourseModel } from '../course/course.model';
 import { SemesterRegistrationModel } from '../semesterResgistration/semesterRegistration.model';
 import { startSession } from 'mongoose';
+import { FacultyModel } from '../faculty/faculty.model';
+import { calculateGradeAndPoints } from './enrolledCourse.utils';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 // Create an enrolled course
 const createEnrolledCourseService = async (
@@ -101,7 +104,7 @@ const createEnrolledCourseService = async (
   if (totalCredits && maxCredit && totalCredits + currentCredit > maxCredit) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'You have exceeded maximum number of credits !',
+      'You have exceeded maximum number of credits!',
     );
   }
 
@@ -156,12 +159,131 @@ const createEnrolledCourseService = async (
   }
 };
 
+// Get all courses of a specific student
+const getMyEnrolledCoursesService = async (
+  studentId: string,
+  query: Record<string, unknown>,
+) => {
+  const student = await StudentModel.findOne({ id: studentId });
+
+  if (!student) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found !');
+  }
+
+  const enrolledCourseQuery = new QueryBuilder(
+    EnrolledCourseModel.find({ student: student._id }).populate(
+      'semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course student faculty',
+    ),
+    query,
+  )
+    .filter()
+    .sort()
+    .pagination()
+    .fields();
+
+  const result = await enrolledCourseQuery.modelQuery;
+  const meta = await enrolledCourseQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
+};
+
 // Create an enrolled course's info
-const updateEnrolledCourseMarksService = (
+const updateEnrolledCourseMarksService = async (
+  facultyId: string,
   payload: Partial<EnrolledCourseProps>,
-) => {};
+) => {
+  const { semesterRegistration, offeredCourse, student, courseMarks } = payload;
+
+  // check is semester registration exists or not
+  const isSemesterRegistrationExists =
+    await SemesterRegistrationModel.findById(semesterRegistration);
+  if (!isSemesterRegistrationExists) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Semester registration not found!',
+    );
+  }
+
+  // check is offered course exists or not
+  const isOfferedCourseExists =
+    await OfferedCourseModel.findById(offeredCourse);
+  if (!isOfferedCourseExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Offered course not found!');
+  }
+
+  // check is student exists or not
+  const isStudentExists = await StudentModel.findById(student);
+  if (!isStudentExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found!');
+  }
+
+  // check is faculty exists or not
+  const faculty = await FacultyModel.findOne({ id: facultyId }, { _id: 1 });
+  if (!faculty) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found!');
+  }
+
+  // check is course belongs to given faculty
+  const isCourseBelongToFaculty = await EnrolledCourseModel.findOne({
+    semesterRegistration,
+    offeredCourse,
+    student,
+    faculty: faculty._id,
+  });
+
+  if (!isCourseBelongToFaculty) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
+  }
+
+  // Modify course marks data
+  const modifiedData: Record<string, unknown> = {
+    ...courseMarks,
+  };
+
+  if (courseMarks?.finalTerm) {
+    const { classTest1, classTest2, midTerm, finalTerm } =
+      isCourseBelongToFaculty.courseMarks;
+
+    // calculate total marks, grade & gpa
+    const totalMarks =
+      Math.ceil(classTest1 * 0.1) +
+      Math.ceil(midTerm * 0.3) +
+      Math.ceil(classTest2 * 0.1) +
+      Math.ceil(finalTerm * 0.5);
+
+    const result = calculateGradeAndPoints(totalMarks);
+
+    // set grade and grade points (gpa) into modify data (course marks)
+    modifiedData.grade = result.grade;
+    modifiedData.gradePoints = result.gradePoints;
+    modifiedData.isCompleted = true;
+  }
+
+  if (courseMarks && Object.keys(courseMarks).length) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedData[`courseMarks.${key}`] = value;
+    }
+  }
+
+  // update course marks, grade & grade point (gpa)
+  const result = await EnrolledCourseModel.findByIdAndUpdate(
+    isCourseBelongToFaculty._id,
+    modifiedData,
+    {
+      new: true,
+    },
+  );
+
+  return result;
+
+  return null;
+};
 
 export const EnrolledCourseServices = {
   createEnrolledCourseService,
+  getMyEnrolledCoursesService,
   updateEnrolledCourseMarksService,
 };

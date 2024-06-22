@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import { FacultyServices } from './faculty.service';
 
 // Get all faculties
-const getAllFaculties = catachAsync(async (req, res, next) => {
+const getAllFaculties = catchAsync(async (req, res, next) => {
   const result = await FacultyServices.getAllFacultiesService();
   sendResponse(res, {
     success: true,
@@ -15,7 +15,7 @@ const getAllFaculties = catachAsync(async (req, res, next) => {
 });
 
 // Get single faculty by Id
-const getSingleFacultyById = catachAsync(async (req, res, next) => {
+const getSingleFacultyById = catchAsync(async (req, res, next) => {
   const { facultyId } = req.params;
   const result = await FacultyServices.getSingleFacultyByIdService(facultyId);
 
@@ -28,7 +28,7 @@ const getSingleFacultyById = catachAsync(async (req, res, next) => {
 });
 
 // Update a faculty info by Id
-const updateFacultyById = catachAsync(async (req, res, next) => {
+const updateFacultyById = catchAsync(async (req, res, next) => {
   const { facultyId } = req.params;
   const { faculty: payload } = req.body;
   const result = await FacultyServices.updateFacultyByIdService(
@@ -44,7 +44,7 @@ const updateFacultyById = catachAsync(async (req, res, next) => {
 });
 
 // Delete s student info (isDeleted = true) by Id
-const deleteFacultyById = catachAsync(async (req, res, next) => {
+const deleteFacultyById = catchAsync(async (req, res, next) => {
   const { facultyId } = req.params;
   const result = await FacultyServices.deleteFacultyByIdService(facultyId);
   sendResponse(res, {

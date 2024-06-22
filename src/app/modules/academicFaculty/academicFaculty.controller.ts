@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 import { AcademicFacultyServices } from './academicFaculty.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
-import catachAsync from '../../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 
 // Create a academic faculty
-const createAcademicFaculty = catachAsync(
+const createAcademicFaculty = catchAsync(
   async (req: Request, res: Response) => {
     const result = await AcademicFacultyServices.createAcademicFacultyService(
       req.body,
@@ -21,7 +21,7 @@ const createAcademicFaculty = catachAsync(
 );
 
 // Fetch all academic faculties
-const getAllAcademicFaculties = catachAsync(
+const getAllAcademicFaculties = catchAsync(
   async (req: Request, res: Response) => {
     const result =
       await AcademicFacultyServices.getAllAcademicFacultiesService();
@@ -36,7 +36,7 @@ const getAllAcademicFaculties = catachAsync(
 );
 
 // Fetch single academic faculty by Id
-const getSingleAcademicFacultyById = catachAsync(
+const getSingleAcademicFacultyById = catchAsync(
   async (req: Request, res: Response) => {
     const { facultyId } = req.params;
     const result =
@@ -54,7 +54,7 @@ const getSingleAcademicFacultyById = catachAsync(
 );
 
 // Update single academic faculty's info by Id
-const updateAcademicFacultyById = catachAsync(
+const updateAcademicFacultyById = catchAsync(
   async (req: Request, res: Response) => {
     const { facultyId } = req.params;
     const result =
