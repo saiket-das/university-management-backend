@@ -10,21 +10,21 @@ const router = express.Router();
 // Fetch all students
 router.get(
   '/',
-  auth(USER_ROLE.admin, USER_ROLE.faculty),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
   StudentControllers.getAllStudents,
 );
 
 // Fetch single student by Id
 router.get(
   '/:studentId',
-  auth(USER_ROLE.admin, USER_ROLE.faculty),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
   StudentControllers.getSingleStudentbyId,
 );
 
 // Update single student info by Id
 router.patch(
   '/:studentId',
-  auth(USER_ROLE.admin, USER_ROLE.student),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.student),
   validateRequest(StudentValidations.updateStudentValidationSchema),
   StudentControllers.updateStudentById,
 );
@@ -32,7 +32,7 @@ router.patch(
 // Delete single student by Id
 router.delete(
   '/:studentId',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   StudentControllers.deleteStudentById,
 );
 

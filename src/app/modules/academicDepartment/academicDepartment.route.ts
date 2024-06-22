@@ -2,12 +2,15 @@ import { Router } from 'express';
 import validateRequest from '../../middlewares/validateRequestion';
 import { AcademicDepartmentValidations } from './academicDepartment.validation';
 import { AcademicDepartmentControllers } from './academicDepartment.controller';
+import auth from '../../middlewares/auth';
+import { USER_ROLE } from '../user/user.constant';
 
 const router = Router();
 
 // Create a academic department
 router.post(
   '/create-academic-department',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     AcademicDepartmentValidations.createAcademicDepartmentValidationSchema,
   ),

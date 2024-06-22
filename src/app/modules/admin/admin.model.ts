@@ -52,7 +52,7 @@ const adminSchema = new Schema<AdminProps>(
       enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
       required: true,
     },
-    profileImage: { type: String, required: true },
+    profileImage: { type: String, default: '' },
     user: {
       type: Schema.Types.ObjectId,
       unique: true,

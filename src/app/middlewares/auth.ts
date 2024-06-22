@@ -8,10 +8,6 @@ import config from '../config';
 import { UserRoleProps } from '../modules/user/user.constant';
 import { UserModel } from '../modules/user/user.model';
 
-interface CustomRequest extends Request {
-  user: JwtPayload;
-}
-
 // Validate JWT
 const auth = (...requireRoles: UserRoleProps[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {

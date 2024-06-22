@@ -58,7 +58,7 @@ const facultySchema = new Schema<FacultyProps>(
       enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
       required: true,
     },
-    profileImage: { type: String, required: true },
+    profileImage: { type: String, default: '' },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, 'User is required'],

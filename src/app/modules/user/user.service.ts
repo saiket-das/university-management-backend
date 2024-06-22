@@ -20,6 +20,7 @@ import { AdminModel } from '../admin/admin.model';
 import { USER_ROLE } from './user.constant';
 import { JwtPayload } from 'jsonwebtoken';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+import { AcademicDepartmentModel } from '../academicDepartment/academicDepartment.model';
 
 // Create a new student
 const createStudentService = async (
@@ -33,9 +34,21 @@ const createStudentService = async (
   userData.role = 'student'; // set student role
   userData.email = payload.email;
 
+  // check is admission semester exists or not
   const admissionSemester = await AcademicSemesterModel.findById(
     payload.admissionSemester,
   );
+  if (!admissionSemester) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic semester not found');
+  }
+
+  // check is academic department exists or not
+  const isAcademicDepartmentExists = await AcademicDepartmentModel.findById(
+    payload.academicDepartment,
+  );
+  if (!isAcademicDepartmentExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found');
+  }
 
   const session = await mongoose.startSession();
   try {
@@ -53,14 +66,17 @@ const createStudentService = async (
     }
 
     // send image to cloudinary
-    const path = file?.path;
-    const imageName = `${userData.id}-${payload.name.firstName}`;
-    const { secure_url } = await sendImageToCloudinary(path, imageName);
+    if (file) {
+      const path = file?.path;
+      const imageName = `${userData.id}-${payload.name.firstName}`;
+      const { secure_url } = await sendImageToCloudinary(path, imageName);
+      payload.profileImage = secure_url as string;
+    }
 
     // set id , _id as user into student, proile image
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImage = secure_url;
+    payload.academicFaculty = isAcademicDepartmentExists._id;
 
     // create a student  (transaction-2)
     const newStudent = await StudentModel.create([payload], { session });
@@ -103,14 +119,16 @@ const createFacultyService = async (
     }
 
     // send image to cloudinary
-    const path = file?.path;
-    const imageName = `${userData.id}-${payload.name.firstName}`;
-    const { secure_url } = await sendImageToCloudinary(path, imageName);
+    if (file) {
+      const path = file?.path;
+      const imageName = `${userData.id}-${payload.name.firstName}`;
+      const { secure_url } = await sendImageToCloudinary(path, imageName);
+      payload.profileImage = secure_url as string;
+    }
 
     // set id , _id as user into faculty,
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImage = secure_url;
 
     // create a faculty  (transaction-2)
     const newFaculty = await FacultyModel.create([payload], { session });
@@ -156,14 +174,16 @@ const createAdminService = async (
     }
 
     // send image to cloudinary
-    const path = file?.path;
-    const imageName = `${userData.id}-${payload.name.firstName}`;
-    const { secure_url } = await sendImageToCloudinary(path, imageName);
+    if (file) {
+      const path = file?.path;
+      const imageName = `${userData.id}-${payload.name.firstName}`;
+      const { secure_url } = await sendImageToCloudinary(path, imageName);
+      payload.profileImage = secure_url as string;
+    }
 
     // set id , _id as user into admin, proile image
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImage = secure_url;
 
     // create a new admin  (transaction-2)
     const newAdmin = await AdminModel.create([payload], { session });

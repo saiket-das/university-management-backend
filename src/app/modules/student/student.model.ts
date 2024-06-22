@@ -108,7 +108,7 @@ const studentSchema = new Schema<StudentProps>(
       enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
       required: true,
     },
-    profileImage: { type: String, required: true },
+    profileImage: { type: String, default: '' },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, 'User is required'],
@@ -125,6 +125,11 @@ const studentSchema = new Schema<StudentProps>(
       required: [true, 'Academic department is reuqired'],
       ref: 'Academic-Department',
     },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'Academic-Faculty',
+    },
+
     isDeleted: {
       type: Boolean,
       default: false,

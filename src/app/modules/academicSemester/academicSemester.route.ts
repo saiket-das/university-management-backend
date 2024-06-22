@@ -2,12 +2,15 @@ import { Router } from 'express';
 import { AcademicSemesterControllers } from './academicSemester.controller';
 import validateRequest from '../../middlewares/validateRequestion';
 import { AcademicSemesterValidations } from './academicSemester.validation';
+import { USER_ROLE } from '../user/user.constant';
+import auth from '../../middlewares/auth';
 
 const router = Router();
 
 // Create a academic semester
 router.post(
   '/create-academic-semester',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     AcademicSemesterValidations.creatAcademicSemesterValidationSchema,
   ),
