@@ -21,7 +21,6 @@ const createEnrolledCourse = catchAsync(async (req, res, next) => {
 // Get all courses of a specific student
 const getMyEnrolledCourses = catchAsync(async (req, res) => {
   const studentId = req.user.userId;
-
   const result = await EnrolledCourseServices.getMyEnrolledCoursesService(
     studentId,
     req.query,

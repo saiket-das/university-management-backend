@@ -8,16 +8,16 @@ import { FacultyProps } from './faculty.interface';
 // Get all faculties
 const getAllFacultiesService = async () => {
   const result = await FacultyModel.find()
-    .populate('academicFaculty')
-    .populate('academicDepartment');
+    .populate('admissionSemester')
+    .populate(' academicDepartment academicFaculty');
   return result;
 };
 
 // Get single faculty by Id
 const getSingleFacultyByIdService = async (facultyId: string) => {
   const result = await FacultyModel.findById(facultyId)
-    .populate('academicFaculty')
-    .populate('academicDepartment');
+    .populate('admissionSemester')
+    .populate(' academicDepartment academicFaculty');
   return result;
 };
 

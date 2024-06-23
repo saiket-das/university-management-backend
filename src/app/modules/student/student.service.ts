@@ -13,12 +13,7 @@ const getAllStudentsService = async (query: Record<string, unknown>) => {
     StudentModel.find()
       .populate('user')
       .populate('admissionSemester')
-      .populate({
-        path: 'academicDepartment',
-        populate: {
-          path: 'academicFaculty',
-        },
-      }),
+      .populate(' academicDepartment academicFaculty'),
     query,
   )
     .search(StudentSearchableFields)
@@ -35,12 +30,8 @@ const getAllStudentsService = async (query: Record<string, unknown>) => {
 const getSingleStudentByIdService = async (studentId: string) => {
   const result = await StudentModel.findById(studentId)
     .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
+    .populate(' academicDepartment academicFaculty');
+
   return result;
 };
 
