@@ -15,7 +15,7 @@ const auth = (...requireRoles: UserRoleProps[]) => {
 
     // check is token is sent from client
     if (!token) {
-      throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized!');
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
 
     // check is Token valid or not
@@ -32,7 +32,7 @@ const auth = (...requireRoles: UserRoleProps[]) => {
     // check is Role is valid or not
     const { userId, role, iat } = decoded;
     if (requireRoles && !requireRoles.includes(role)) {
-      throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized!');
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
 
     const user = await UserModel.isUserExists(userId);

@@ -30,7 +30,7 @@ router.patch(
 // Refresh token
 router.post(
   '/refresh-token',
-  validateRequest(AuthValidations.refreshTokenValidationSchema),
+  // validateRequest(AuthValidations.refreshTokenValidationSchema),
   AuthControllers.refreshToken,
 );
 
