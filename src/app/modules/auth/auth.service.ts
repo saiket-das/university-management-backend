@@ -41,7 +41,7 @@ const loginUserService = async (payload: LoginUserProps) => {
     userId: user.id,
     role: user.role,
   };
-  // Generate a Access Token
+  // Generate an Access Token
   const accessToken = generateToken(
     jwtPayload,
     config.jwt_access_token as string,
