@@ -37,7 +37,7 @@ const auth = (...requireRoles: UserRoleProps[]) => {
     const user = await UserModel.isUserExists(userId);
     // check is user exists or not
     if (!user) {
-      throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+      throw new AppError(httpStatus.NOT_FOUND, 'User is not found!');
     }
 
     // check is user already deleted or not
@@ -61,7 +61,7 @@ const auth = (...requireRoles: UserRoleProps[]) => {
         passwordChangedAt as Date,
       )
     ) {
-      throw new AppError(httpStatus.FORBIDDEN, 'Password changed!');
+      throw new AppError(httpStatus.FORBIDDEN, 'Password has been changed!');
     }
 
     req.user = decoded as JwtPayload;
