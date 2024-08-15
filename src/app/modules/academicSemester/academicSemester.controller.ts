@@ -19,13 +19,15 @@ const createAcademicSemester = catchAsync(async (req, res, next) => {
 
 // Get all academic semesters
 const fetchAllAcademicSemester = catchAsync(async (req, res, next) => {
-  const result =
-    await AcademicSemesterServices.fetchAllAcademicSemesterService();
+  const result = await AcademicSemesterServices.fetchAllAcademicSemesterService(
+    req.query,
+  );
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
+    meta: result.meta,
+    data: result.result,
     message: 'Fetch all academic semesters successfully!',
-    data: result,
   });
 });
 
