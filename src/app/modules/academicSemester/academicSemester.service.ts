@@ -1,8 +1,12 @@
-import { academicSemesterNameCodeMapper } from './academicSemester.constant';
+import {
+  academicSemesterNameCodeMapper,
+  AcademicSemesterSearchableFields,
+} from './academicSemester.constant';
 import { AcademicSemesterProps } from './academicSemester.interface';
 import { AcademicSemesterModel } from './academicSemester.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 // Create a new academic semester
 const createAcademicSemesterService = async (
@@ -17,9 +21,29 @@ const createAcademicSemesterService = async (
 };
 
 // Get all academic semesters
-const fetchAllAcademicSemesterService = async () => {
-  const result = await AcademicSemesterModel.find();
-  return result;
+const fetchAllAcademicSemesterService = async (
+  query: Record<string, unknown>,
+) => {
+  // const result = await AcademicSemesterModel.find();
+  // return result;
+
+  const academicSemesterQuery = new QueryBuilder(
+    AcademicSemesterModel.find(),
+    query,
+  )
+    .search(AcademicSemesterSearchableFields)
+    .filter()
+    .sort()
+    .pagination()
+    .fields();
+
+  const result = await academicSemesterQuery.modelQuery;
+  const meta = await academicSemesterQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
 };
 
 // Get a single academic semester by id

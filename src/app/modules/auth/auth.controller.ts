@@ -4,7 +4,6 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import { AuthServices } from './auth.service';
 import config from '../../config';
-import AppError from '../../errors/AppError';
 
 // Login user
 const loginUser = catchAsync(async (req: Request, res: Response) => {
