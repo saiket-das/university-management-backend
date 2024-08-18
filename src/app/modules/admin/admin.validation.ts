@@ -27,9 +27,6 @@ const createAdminValidationSchema = z.object({
       presentAddress: z.string(),
       permanentAddress: z.string(),
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
-      profileImage: z
-        .string()
-        .url({ message: 'Profile image must be a valid URL' }),
       managementDepartment: z.string(),
       isDeleted: z.boolean().optional(),
     }),
