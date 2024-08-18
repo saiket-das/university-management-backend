@@ -37,6 +37,7 @@ const fetchSingleAcademicSemesterById = catchAsync(async (req, res, next) => {
     await AcademicSemesterServices.fetchSingleAcademicSemesterByIdService(
       req.params.semesterId,
     );
+  console.log(result);
 
   sendResponse(res, {
     success: true,
