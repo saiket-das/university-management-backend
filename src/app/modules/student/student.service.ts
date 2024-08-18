@@ -13,7 +13,7 @@ const getAllStudentsService = async (query: Record<string, unknown>) => {
     StudentModel.find()
       .populate('user')
       .populate('admissionSemester')
-      .populate(' academicDepartment academicFaculty'),
+      .populate('academicDepartment academicFaculty'),
     query,
   )
     .search(StudentSearchableFields)
@@ -22,15 +22,17 @@ const getAllStudentsService = async (query: Record<string, unknown>) => {
     .pagination()
     .fields();
 
+  // const result = await studentQuery.modelQuery;
   const result = await studentQuery.modelQuery;
-  return result;
+  const meta = await studentQuery.countTotal();
+  return { meta, result };
 };
 
 // Get single student by Id
 const getSingleStudentByIdService = async (studentId: string) => {
   const result = await StudentModel.findById(studentId)
     .populate('admissionSemester')
-    .populate(' academicDepartment academicFaculty');
+    .populate('academicDepartment academicFaculty');
 
   return result;
 };
