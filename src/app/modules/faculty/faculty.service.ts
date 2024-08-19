@@ -7,17 +7,17 @@ import { FacultyProps } from './faculty.interface';
 
 // Get all faculties
 const getAllFacultiesService = async () => {
-  const result = await FacultyModel.find()
-    .populate('admissionSemester')
-    .populate(' academicDepartment academicFaculty');
+  const result = await FacultyModel.find().populate(
+    'academicDepartment academicFaculty',
+  );
   return result;
 };
 
 // Get single faculty by Id
 const getSingleFacultyByIdService = async (facultyId: string) => {
-  const result = await FacultyModel.findById(facultyId)
-    .populate('admissionSemester')
-    .populate(' academicDepartment academicFaculty');
+  const result = await FacultyModel.findById(facultyId).populate(
+    'academicDepartment academicFaculty',
+  );
   return result;
 };
 
